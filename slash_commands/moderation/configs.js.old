@@ -1,0 +1,94 @@
+const discord = require('discord.js');
+const ConfigHandler = require('../../classes/managers/ConfigHandler.js');
+module.exports = {
+    data: new discord.SlashCommandBuilder()
+        .setName('config')
+        .setDescription('.')
+        .setDefaultMemberPermissions(8)
+        .addSubcommandGroup(
+            group => group
+                .setName('set')
+                .setDescription('.')
+                .addSubcommand(subcommand => subcommand
+                    .setName('texto')
+                    .setDescription('Seta uma configuracao de texto')
+                    .addStringOption(option => option
+                        .setName('nome')
+                        .setDescription('Nome da configuracao')
+                        .setRequired(true)
+                        .setAutocomplete(true)
+                    )
+                    .addStringOption(option => option
+                        .setName('valor')
+                        .setDescription('Valor da configuracao')
+                        .setRequired(true)
+                    )
+                )
+                .addSubcommand(subcommand => subcommand
+                    .setName('numero')
+                    .setDescription('Seta uma configuracao de numero')
+                    .addStringOption(option => option
+                        .setName('nome')
+                        .setDescription('Nome da configuracao')
+                        .setRequired(true)
+                        .setAutocomplete(true)
+                    )
+                    .addIntegerOption(option => option
+                        .setName('valor')
+                        .setDescription('Valor da configuracao')
+                        .setRequired(true)
+                    )
+                )
+                .addSubcommand(subcommand => subcommand
+                    .setName('cargo')
+                    .setDescription('Seta uma configuracao de cargo')
+                    .addStringOption(option => option
+                        .setName('nome')
+                        .setDescription('Nome da configuracao')
+                        .setRequired(true)
+                        .setAutocomplete(true)
+                    )
+                    .addRoleOption(option => option
+                        .setName('cargo')
+                        .setDescription('Cargo da configuracao')
+                        .setRequired(true)
+                    )
+                )
+                .addSubcommand(subcommand => subcommand
+                    .setName('canal')
+                    .setDescription('Seta uma configuracao de canal')
+                    .addStringOption(option => option
+                        .setName('nome')
+                        .setDescription('Nome da configuracao')
+                        .setRequired(true)
+                        .setAutocomplete(true)
+                    )
+                    .addChannelOption(option => option
+                        .setName('canal')
+                        .setDescription('Canal da configuracao')
+                        .setRequired(true)
+                    )
+                )
+        ),
+    async execute(client, interaction) {
+
+    },
+    async autocomplete({client, interaction}) {
+        const guildData = await client.guildManager.fetch(interaction.guild.id).catch(() => { })
+        if (!guildData) return interaction.respond([{name: 'Você não está na black lotus', value: '0'}])
+        const configHandler = new ConfigHandler(client, guildData)
+        const commands = configHandler.fuzzySearch(interaction.options.getString('nome'))
+        const options = []
+        for (const command of commands) {
+            console.log(command)
+            const commandData = await configHandler.getByConfigName(command.item)
+            console.log(commandData)
+            if (!commandData) continue
+            options.push({
+                name: `${commandData.name} - ${commandData.display}`,
+                value: commandData.name
+            })
+        }
+        await interaction.respond(options)
+    }
+}
