@@ -1,0 +1,48 @@
+{
+  "name": "black-lotus",
+  "version": "2.3.0",
+  "description": "Bot da Black Lotus",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "cd dist && node index.js",
+    "build": "tsc",
+    "cleanBuild": "del-cli dist && tsc && npm run postbuild",
+    "postbuild": "copyfiles .env config.json dist",
+    "buildAndStart": "npm run cleanBuild && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PlaryWasTaken/BlackLotus.git"
+  },
+  "author": "Plary",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PlaryWasTaken/BlackLotus/issues"
+  },
+  "homepage": "https://github.com/PlaryWasTaken/BlackLotus#readme",
+  "dependencies": {
+    "chalk": "^4",
+    "copyfiles": "^2.4.1",
+    "dayjs": "^1.11.1",
+    "del-cli": "^5.1.0",
+    "discord-api-types": "^0.37.0",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.2",
+    "fuse.js": "^6.6.2",
+    "image-url-validator": "^1.0.4",
+    "imgur": "^2.2.0",
+    "is-image-url": "^1.1.8",
+    "mongoose": "^6.3.1",
+    "pm2": "^5.2.0",
+    "typescript": "^5.2.2",
+    "uuid": "^8.3.2",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@discordjs/rest": "^1.0.1",
+    "@types/express": "^4.17.18",
+    "@types/node": "^20.8.3",
+    "@types/ws": "^8.5.6"
+  }
+}
