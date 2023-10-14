@@ -14,6 +14,7 @@ import Command from "./classes/structs/Command";
 import GuildManager from "./classes/managers/GuildManager";
 import { Document } from "mongoose";
 import statusHandler from "./classes/structs/Status";
+import Embed from "./classes/structs/Embed";
 
 interface ExtendedClient extends Client {
     logger: Logger;
@@ -34,7 +35,7 @@ interface ExtendedClient extends Client {
 
     events: any // TODO
 
-    mainEmbed: any // TODO
+    mainEmbed: Embed
 
 
 

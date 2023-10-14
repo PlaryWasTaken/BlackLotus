@@ -15,8 +15,9 @@ export default class ConstellationHandler {
         this.data = data
     }
     fetch(): Promise<Constelation> {
-        return new Promise(async (resolve) => {
-            const memberAmount = await this.guild.members.fetch().then(collection => { return collection.size })
+        return new Promise(async (resolve, err) => {
+            const memberAmount = await this.guild.members.fetch().then(collection => { return collection.size }).catch(() => { })
+            if (!memberAmount) return err('No member amount')
             const constellations = await ConstellationModel.find()
             constellations.sort((a, b) => b.position - a.position)
             let correctConstellation: unknown;

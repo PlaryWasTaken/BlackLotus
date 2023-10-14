@@ -6,7 +6,7 @@ import Guild from "./Guild";
 export default class Embed {
     private client: ExtendedClient;
     private readonly id: number;
-    private message: any;
+    public message: any;
     private servers: Guild[];
     constructor(client: ExtendedClient, id: number) {
         this.client = client
