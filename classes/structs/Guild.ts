@@ -48,7 +48,7 @@ export default class Guild {
         if (this.guild) {
             this.constelation = new ConstellationHandler(id, client, this.guild, data)
             this.partnerships = new Partnerships(client, this.guild, data)
-        } else client.logger.warn('No guild data provided for guild ' + data.blackLotus.displayName + ' (' + id + ')' )
+        } else client.logger.warning('No guild data provided for guild ' + data.blackLotus.displayName + ' (' + id + ')' )
         this.staffs = this.data.blackLotus.staffs || []
         this.roles.push(this.data.blackLotus.role, this.data.blackLotus.constelation.roleId)
         this.serverRoleId = this.data.blackLotus.role

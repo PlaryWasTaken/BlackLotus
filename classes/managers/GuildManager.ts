@@ -74,7 +74,7 @@ export default class GuildManager {
             for (const guild of guildData) {
                 const guildObj = await this.client.guilds.fetch(guild.id).catch(() => {})
                 if (!guildObj) {
-                    this.client.logger.warn(`Guild ${guild.id} was not found when trying to fetch it`)
+                    this.client.logger.warning(`Guild ${guild.id} was not found when trying to fetch it`)
                     continue
                 }
                 guilds.push(new Guild(guild.id, this.client, guildObj, guild as any))
