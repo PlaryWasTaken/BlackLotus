@@ -1,9 +1,11 @@
-const dayjs = require("dayjs");
-const guildModel = require("../../models/guildDataModel");
+import dayjs from "dayjs";
+import guildModel from "../../models/guildDataModel";
 function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
-const discord = require('discord.js')
+
+import discord from 'discord.js';
+import {ExtendedClient} from "../../types";
 export default class Partnerships {
     private client: any; // TODO
     public data: any;
@@ -15,7 +17,7 @@ export default class Partnerships {
     public timer: any;
     public notify: boolean;
     public notified: boolean;
-    constructor(client, guild, data) {
+    constructor(client: ExtendedClient, guild, data) {
         this.client = client
         this.data = data
         this.guild = guild
@@ -58,7 +60,8 @@ export default class Partnerships {
             if (!this.canUse()) reject('cooldown')
             const cu = await this.checkBeforeSend().catch(reject)
             if (!cu) return
-            const guilds = await guildModel.find({ "partnerships.channelId": { $exists: true } }).catch(() => reject)
+            const guilds = await guildModel.find({ "partnerships.channelId": { $exists: true } }).catch(() => {})
+            if (!guilds) return reject('No guilds found')
             for (let guild of guilds) {
                 if (guild.id === this.id) continue;
                 let channel = await this.client.channels.fetch(guild.partnerships.channelId).catch(() => {})
