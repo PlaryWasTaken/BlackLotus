@@ -29,6 +29,4 @@ const keySchema = new mongoose.Schema({
 
 const model = mongoose.model("Guilds Data", keySchema);
 
-module.exports.model = model;
-module.exports = model;
 export default model;
