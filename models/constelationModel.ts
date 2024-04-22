@@ -8,6 +8,14 @@ const keySchema = new mongoose.Schema({
     roleId: {type: String}
 })
 
+export type Constelation = {
+    name: string,
+    defaultRoles: Array<string>,
+    position: number,
+    minimumMemberAmmout: number,
+    roleId: string
+}
+
 const model = mongoose.model("Constelations", keySchema);
 
 module.exports = model;
