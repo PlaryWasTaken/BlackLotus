@@ -81,7 +81,7 @@ extendedClient.mainEmbed = new Embed(extendedClient, 0);
 extendedClient.configs = configs;
 extendedClient.logger = mainLogger;
 extendedClient.updateManager = new UpdateManager(extendedClient, mainLogger.child({service: 'UpdateManager', hexColor: '#ffaa00'}));
-extendedClient.updateManager.registerNewUpdateTarget('main', extendedClient.mainEmbed.updateEmbed);
+extendedClient.updateManager.registerNewUpdateTarget('main', extendedClient.mainEmbed.updateEmbed.bind(extendedClient.mainEmbed));
 
 ['eventHandler', 'interactionHandler'].forEach(handler => {
     import(`./handlers/${handler}`).then((file) => {
