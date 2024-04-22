@@ -4,6 +4,8 @@ import pm2 from "pm2"
 import {Logger} from "winston";
 import {Collection} from "discord.js";
 import {ExtendedClient} from "./types";
+import guildModel from './models/guildDataModel';
+import {Constelation} from "./models/constelationModel";
 
 export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
     const app = express();
@@ -48,8 +50,8 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
         });
     })
     app.get(`/api/constellations`, async (req, res) => {
-        const guildModel = require('./models/guildDataModel')
-        const servers = await guildModel.find({"blackLotus.constelation": {$exists: true}}).populate("blackLotus.constelation")
+
+        const servers = await guildModel.find({"blackLotus.constelation": {$exists: true}}).populate<{ blackLotus: { constelation: Constelation } }>("blackLotus.constelation")
         const constellations = new Collection<string, any[]>()
         servers.forEach(server => {
             if (constellations.get(server.blackLotus.constelation.name)) {
