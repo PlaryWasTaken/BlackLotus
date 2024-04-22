@@ -15,11 +15,12 @@ import GuildManager from "./classes/managers/GuildManager";
 import { Document } from "mongoose";
 import statusHandler from "./classes/structs/Status";
 import Embed from "./classes/structs/Embed";
+import {UpdateManager} from "./classes/managers/UpdateManager";
 
 interface ExtendedClient extends Client {
     logger: Logger;
 
-    statusHandler: statusHandler
+    statusHandler: statusHandler;
 
     blackLotus: Guild;
 
@@ -29,13 +30,15 @@ interface ExtendedClient extends Client {
 
     slashCommands: Collection<string, Command>
 
-    logChannel: TextChannel
+    logChannel: TextChannel;
 
-    configs: any // TODO
+    configs: any; // TODO
 
-    events: any // TODO
+    events: any; // TODO
 
-    mainEmbed: Embed
+    mainEmbed: Embed;
+
+    updateManager: UpdateManager;
 
 
 

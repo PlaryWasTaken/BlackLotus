@@ -73,7 +73,7 @@ export default class Embed {
             resolve(embed.toJSON())
         })
     }
-    updateEmbed(): Promise<this> {
+    updateEmbed(): Promise<void> {
         return new Promise(async (resolve, err) => {
             await this.loadInfo() // Reload embed info
 
@@ -84,7 +84,7 @@ export default class Embed {
             const embed = new EmbedBuilder(await this.getEmbedJson())
             const result = await message.edit({embeds: [embed]}).catch(err)
             if (!result) return
-            resolve(this)
+            resolve()
         })
     }
 }

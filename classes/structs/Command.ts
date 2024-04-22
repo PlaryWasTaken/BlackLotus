@@ -9,7 +9,6 @@ type AutocompleteFunction = (args: {
     client: ExtendedClient,
     interaction: AutocompleteInteraction
 }) => unknown
-// Discord.js is truly a strange piece of software sometimes
 type AnySlashCommand = SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> | Omit<SlashCommandBuilder, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
 export default class Command {
     private readonly data: AnySlashCommand

@@ -1,14 +1,11 @@
 import {ExtendedClient} from "../../types";
-
-let running = true
-function sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
 import discord, {ActivityType} from 'discord.js';
+import {sleep} from "../../utils/sleep";
+// noinspection JSUnusedGlobalSymbols
 export default class statusHandler {
     private client: ExtendedClient;
     private readonly statusList: [string, { type: ActivityType }][];
+    private running: boolean = false;
     constructor(client: ExtendedClient) {
 
         this.client = client
@@ -21,18 +18,15 @@ export default class statusHandler {
     }
 
     async startLoop() {
-        running = true
-        while (running) {
+        while (this.running) {
             for (let status of this.statusList) {
-                // @ts-ignore
-                if (running === false) break
                 this.client.user.setActivity(status[0], status[1])
                 await sleep(20000)
             }
         }
     }
     stopLoop() {
-        running = false
+        this.running = false
     }
     setCustomStatus(options: { type: ActivityType; name: string }) {
         this.client.user.setActivity(options)

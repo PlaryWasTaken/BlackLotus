@@ -3,12 +3,11 @@
 import Event from "../../classes/structs/Event";
 import statusHandler from '../../classes/structs/Status';
 import {ExtendedClient} from "../../types";
-import {Logger} from "winston";
+import {clear, Logger} from "winston";
 import {TextChannel} from "discord.js";
-function sleep(milliseconds: number) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-const Second = 1000
+import {sleep} from "../../utils/sleep";
+
+const Second = 1000 as const
 async function startTicks(client: ExtendedClient, logger: Logger) {
     logger = logger.child({service: 'Tick', hexColor: '#d1ff75'})
     while (true) {
@@ -21,13 +20,14 @@ async function startEmbedTicks(client: ExtendedClient, logger: Logger) {
     logger = logger.child({service: 'Embed Tick', hexColor: '#75ffa0'})
     while (true) {
         logger.info('Tick de 30 minutos')
-        await client.mainEmbed.updateEmbed().catch((err: Error) => { console.log('Erro ao atualizar embed' + '\n' + err) })
+        await client.updateManager.runAllUpdates()
         client.emit("blacklotus.30minTick")
         await sleep(1800000)
     }
 }
 
 
+// noinspection JSUnusedGlobalSymbols
 export default new Event().setData("ready", async (client) => {
     const logger = client.logger.child({service: 'Ready event', hexColor: '#ff75e6'})
     logger.notice('Client ready!')
@@ -43,7 +43,7 @@ export default new Event().setData("ready", async (client) => {
     client.statusHandler.startLoop()
     client.blackLotus = await client.guilds.fetch('896047806454837278')
     const logChannel = await client.blackLotus.channels.fetch(client.configs.logChannel).catch(() => {}) as TextChannel | undefined
-    if (!logChannel) return logger.error('Can\'t find log channel in black lotus guild!!!!!!!!!!!!!!!!')
+    if (!logChannel) return logger.error('Can\'t find log channel in black lotus guild!')
     client.logChannel = logChannel
     const servers = await client.guildManager.fetchByKV({ "blackLotus.trackNameChanges": true }).catch(() => {})
     if (!servers) return;
