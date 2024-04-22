@@ -83,11 +83,14 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
                     constelation: {
                         name: server.blackLotus.constelation.name,
                         minMembers: server.blackLotus.constelation.minimumMemberAmmout,
+                        joinedAt: server.blackLotus.joinedAt || null,
                     },
                     members: guild.memberCount,
                     partnerships: server.partnerships,
                     invite: server.blackLotus.invite,
-                    icon: guild.iconURL({size: 1024})
+                    icon: guild.iconURL({size: 1024}),
+                    description: guild.description,
+                    banner: guild.bannerURL({size: 1024}),
                 }
             })
         }

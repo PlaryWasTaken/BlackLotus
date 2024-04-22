@@ -13,6 +13,7 @@ const keySchema = new mongoose.Schema({
         embedWorthy: {type: Boolean, required: true, default: true },
         trackGrowth: {type: Boolean, required: false, default: true },
         trackNameChanges: {type: Boolean, required: false, default: true },
+        joinedAt: {type: Number, required: false, default: Date.now() }
     },
     partnerships: {
         channelId: { type: String, required: true }, // Channel id of the partnerships channel
@@ -29,4 +30,6 @@ const keySchema = new mongoose.Schema({
 
 const model = mongoose.model("Guilds Data", keySchema);
 
+module.exports.model = model;
+module.exports = model;
 export default model;
