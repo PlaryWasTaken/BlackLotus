@@ -35,7 +35,8 @@ export default class GuildManager {
                     invite: `https://discord.gg/${guild.vanityURLCode || invite}`,
                     representant: repId,
                     constelation: await ConstelationHandle.fetch(),
-                    embedWorthy: guild.name.length < 25
+                    embedWorthy: guild.name.length < 25,
+                    joinedAt: Date.now()
                 }
             })
             await profile.save()
