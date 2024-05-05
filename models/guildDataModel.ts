@@ -9,16 +9,16 @@ const keySchema = new mongoose.Schema({
         constelation: {type: mongoose.Types.ObjectId, ref: 'Constelations'},
         representant: {type: String, required: true },
         staffs: {type: Array, required: true },
-        role: {type: String, required: true },
+        role: {type: String, required: false },
         embedWorthy: {type: Boolean, required: true, default: true },
         trackGrowth: {type: Boolean, required: false, default: true },
         trackNameChanges: {type: Boolean, required: false, default: true },
         joinedAt: {type: Number, required: false, default: Date.now() }
     },
     partnerships: {
-        channelId: { type: String, required: true }, // Channel id of the partnerships channel
-        mentionId: { type: String, required: true }, // Mention id of the partnerships role
-        message: { type: String, required: true }, // Guild defined message to send when making partnerships
+        channelId: { type: String, required: false }, // Channel id of the partnerships channel
+        mentionId: { type: String, required: false }, // Mention id of the partnerships role
+        message: { type: String, required: false }, // Guild defined message to send when making partnerships
         timer: {type: Number, required: false, default: 0}, // Guild cooldown for partnerships
         notify: {type: Boolean, required: false, default: false }, // Whether to notify the representant when the cooldown expires
         notified: {type: Boolean, required: false, default: false } // Whether the representant has been notified
