@@ -1,7 +1,7 @@
-import Command from "../../classes/structs/Command";
+import Command from "#structs/Command";
 
 import discord from 'discord.js';
-import serverModel from "../../models/guildDataModel";
+import serverModel from "#models/guild.js";
 export default new Command({
     command: new discord.SlashCommandBuilder()
         .setName('info')
@@ -40,34 +40,35 @@ export default new Command({
                 .setAutocomplete(true)
             )
         ),
+    guilds: ["896047806454837278", "921162438001447023"],
     async run({client, interaction}) {
         switch (interaction.options.getSubcommand()) {
             case 'server':
                 const server = interaction.options.getString('server')
-                const guildData = await client.guildManager.fetch(server).catch(() => {})
+                const guildData = await client.blackLotusManager.fetch(server).catch(() => {})
                 const guild = await client.guilds.fetch(server).catch(() => {})
                 if (!guildData || !guild) return interaction.reply({content: 'Servidor não encontrado', ephemeral: true})
                 const owner = await client.users.fetch(guild.ownerId).catch(() => {})
                 const rep = await client.users.fetch(guildData.representant)
                 const embed = new discord.EmbedBuilder()
-                    .setTitle(`Informacões sobre o servidor ${guildData.data.blackLotus.displayName}`)
+                    .setTitle(`Informacões sobre o servidor ${guildData.data.modules.blackLotus.displayName}`)
                     .setFields([
                         { name: 'Informacões gerais', value:
                                 `Nome do servidor: ${guild.name}
-                                Nome de display: ${guildData.data.blackLotus.displayName}
+                                Nome de display: ${guildData.data.modules.blackLotus.displayName}
                                 Id: ${guild.id}
                                 Dono: ${owner ? owner.tag : guild.ownerId + " (Não encontrado)"}
                                 Representante: ${guildData.representant ? `${rep.tag} (Id: ${guildData.representant})` : 'Nenhum'}
                         `},
                         { name: 'Validacões', value:
-                                `Nome tem menos de 25 caracteres: ${guildData.data.blackLotus.displayName.length <= 25 ? `Sim (${guildData.data.blackLotus.displayName.length} Caracteres)` : `Não (${guildData.data.blackLotus.displayName.length} Caracteres)`}
+                                `Nome tem menos de 25 caracteres: ${guildData.data.modules.blackLotus.displayName.length <= 25 ? `Sim (${guildData.data.modules.blackLotus.displayName.length} Caracteres)` : `Não (${guildData.data.modules.blackLotus.displayName.length} Caracteres)`}
                                  Bot tem permissão para criar invites: ${guild.members.me.permissions.has(discord.PermissionsBitField.Flags.CreateInstantInvite) ? 'Sim' : 'Não'}
                                  Bot tem permissão para rastrear invites deletados: ${guild.members.me.permissions.has(discord.PermissionsBitField.Flags.ManageGuild) ? 'Sim' : 'Não'}
                                 `},
                         { name: 'Configuracões', value:
-                            `Segue crescimento: ${guildData.data.blackLotus.trackGrowth ? 'Sim' : 'Não'}
-                            Aparece na embed: ${guildData.data.blackLotus.embedWorthy ? 'Sim' : 'Não'}
-                            Atualiza o nome automaticamente: ${guildData.data.blackLotus.trackNameChanges ? 'Sim' : 'Não'}
+                            `Segue crescimento: ${guildData.data.modules.blackLotus.trackGrowth ? 'Sim' : 'Não'}
+                            Aparece na embed: ${guildData.data.modules.blackLotus.embedWorthy ? 'Sim' : 'Não'}
+                            Atualiza o nome automaticamente: ${guildData.data.modules.blackLotus.trackNameChanges ? 'Sim' : 'Não'}
                             `}
                     ])
                     .setColor('#8800ff')
@@ -80,7 +81,7 @@ export default new Command({
         const options = []
         servers.forEach(server => {
             options.push({
-                name: server.blackLotus.displayName,
+                name: server.modules.blackLotus.displayName,
                 value: server.id
             })
         })

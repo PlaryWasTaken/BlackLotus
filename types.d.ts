@@ -10,12 +10,14 @@ import {
     VoiceState
 } from "discord.js";
 import {Logger} from "winston";
-import Command from "./classes/structs/Command";
-import GuildManager from "./classes/managers/GuildManager";
-import { Document } from "mongoose";
-import statusHandler from "./classes/structs/Status";
-import Embed from "./classes/structs/Embed";
-import {UpdateManager} from "./classes/managers/UpdateManager";
+import Command from "#structs/Command";
+import BlackLotusManager from "#managers/BlackLotusManager";
+import statusHandler from "#structs/Status";
+import BlackLotusEmbed from "#structs/BlackLotusEmbed";
+import {UpdateManager} from "#managers/UpdateManager";
+import Event from "#structs/Event";
+import GuildManager from "#managers/GuildManager";
+import SyndicateManager from "#managers/SyndicateManager";
 
 interface ExtendedClient extends Client {
     logger: Logger;
@@ -26,17 +28,19 @@ interface ExtendedClient extends Client {
 
     commands: CommandsMap;
 
+    blackLotusManager: BlackLotusManager;
+
+    syndicateManager: SyndicateManager;
+
     guildManager: GuildManager;
 
     slashCommands: Collection<string, Command>
 
     logChannel: TextChannel;
 
-    configs: any; // TODO
+    events: Collection<string, Event>;
 
-    events: any; // TODO
-
-    mainEmbed: Embed;
+    mainEmbed: BlackLotusEmbed;
 
     updateManager: UpdateManager;
 
@@ -101,6 +105,7 @@ export interface ExtendedClientEvents extends ClientEvents {
     [key: `modal.${string}`]: [ interaction: ModalSubmitInteraction, args: string[] ],
 }
 
+/*
 interface GuildDocument extends Document {
     id: string;
     blacklisted: boolean;
@@ -131,4 +136,7 @@ interface GuildDocument extends Document {
         notified: boolean | null;
     };
 }
+ */
+
+
 

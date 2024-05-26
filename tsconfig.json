@@ -8,7 +8,14 @@
     "esModuleInterop": true,
     "outDir": "./dist",
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "#managers/*": ["classes/managers/*"],
+      "#models/*": ["models/*"],
+      "#structs/*": ["classes/structs/*"],
+      "#/*": ["*"]
+    }
   },
   "exclude": [
     "node_modules",

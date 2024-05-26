@@ -1,5 +1,5 @@
-import ConstellationModel from '../../models/constelationModel'
-import GuildModel from '../../models/guildDataModel'
+import ConstellationModel from '#models/constelation'
+import GuildModel from '#models/guild.js'
 import {ExtendedClient} from "../../types";
 import {Guild} from "discord.js";
 type Constelation = {_id: string, name: string, defaultRoles: any[], position: number, minimumMemberAmount: number, roleId: string}
@@ -62,21 +62,21 @@ export default class ConstellationHandler {
                     continue
                 }
                 await member.roles.remove(this.data.blackLotus.constellation.roleId)
-                const staffGuilds = await this.client.guildManager.fetchByKV({ "blackLotus.staffs": { $elemMatch: { id: staff.id } } })
+                const staffGuilds = await this.client.blackLotusManager.fetchByKV({ "modules.blackLotus.staffs": { $elemMatch: { id: staff.id } } })
                 const rolesToAdd = new Set() // Using a set to prevent duplicate ids
                 rolesToAdd.add(constelationRole.id)
                 for (const guild of staffGuilds) {
                     if (guild.id === this.data.id) continue
-                    rolesToAdd.add(guild.data.blackLotus.constelation.roleId ) // This has to stay here to maintain the old constelation role if the user is part of the staff of another guild
-                    if (guild.data.blackLotus.role) {
-                        rolesToAdd.add(guild.data.blackLotus.role)
+                    rolesToAdd.add(guild.data.modules.blackLotus.constelation.roleId ) // This has to stay here to maintain the old constelation role if the user is part of the staff of another guild
+                    if (guild.data.modules.blackLotus.role) {
+                        rolesToAdd.add(guild.data.modules.blackLotus.role)
                     }
                 }
                 // Adding all the roles at once, from the other guilds in wich the user is part of the staff team
                 await member.roles.add([...rolesToAdd] as any)
             }
             // Remove the representant from the staff array
-            this.data.blackLotus.staffs = this.data.blackLotus.staffs.filter(staff => staff.id !== this.data.blackLotus.representant.id)
+            this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff => staff.id !== this.data.modules.blackLotus.representant.id)
             await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "blackLotus.constelation": constellation._id } })
             resolve(constellation)
         })

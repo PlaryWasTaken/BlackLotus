@@ -1,4 +1,4 @@
-import {ExtendedClient, ExtendedClientEvents} from "../../types";
+import {ExtendedClient, ExtendedClientEvents} from "#/types";
 
 
 export default class Event {

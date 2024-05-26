@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import guildModel from "../../models/guildDataModel";
+import guildModel from "#models/guild.js";
 function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 import discord from 'discord.js';
-import {ExtendedClient} from "../../types";
+import {ExtendedClient} from "#/types";
 export default class Partnerships {
     private client: any; // TODO
     public data: any;
@@ -64,11 +64,11 @@ export default class Partnerships {
             if (!guilds) return reject('No guilds found')
             for (let guild of guilds) {
                 if (guild.id === this.id) continue;
-                let channel = await this.client.channels.fetch(guild.partnerships.channelId).catch(() => {})
+                let channel = await this.client.channels.fetch(guild.modules.partnerships.channelId).catch(() => {})
                 if (!channel) continue;
                 if (!channel.isTextBased()) continue
                 await sleep(3000)
-                await channel.send(this.message.replace(/%mencao%/g, `<@&${guild.partnerships.mentionId}>`).replace(/(@here|@everyone)/g, `<@&${guild.partnerships.mentionId}>`).concat(`\n`, `Rep: <@${this.client.user.id}>`))
+                await channel.send(this.message.replace(/%mencao%/g, `<@&${guild.modules.partnerships.mentionId}>`).replace(/(@here|@everyone)/g, `<@&${guild.modules.partnerships.mentionId}>`).concat(`\n`, `Rep: <@${this.client.user.id}>`))
                     .catch(() => {
                 })
             }

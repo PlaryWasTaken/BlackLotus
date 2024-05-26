@@ -1,6 +1,6 @@
 import {readdirSync, statSync} from 'fs';
 import {resolve, extname} from 'path';
-import {ExtendedClient} from "../types";
+import {ExtendedClient} from "#/types";
 import {Logger} from "winston";
 
 export default (client: ExtendedClient, logger: Logger) => {
