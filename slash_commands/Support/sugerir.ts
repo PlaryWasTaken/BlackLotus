@@ -1,5 +1,5 @@
 import discord from 'discord.js'
-import Command from "../../classes/structs/Command";
+import Command from "#structs/Command";
 const ownerID = "177840117057191937"
 export default new Command({
     command: new discord.SlashCommandBuilder()

@@ -1,7 +1,7 @@
 import Command from "../../classes/structs/Command";
 
 import {EmbedBuilder, SlashCommandBuilder} from 'discord.js';
-import serverSchema from '../../models/guildDataModel';
+import serverSchema from '#models/guild.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime)

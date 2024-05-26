@@ -1,7 +1,7 @@
 import Command from "../../classes/structs/Command";
 
 import {SlashCommandBuilder, PermissionFlagsBits} from "discord.js";
-import serverModel from '../../models/guildDataModel';
+import serverModel from '#models/guild.js';
 
 export default new Command({
     guilds: ["896047806454837278", "921162438001447023"],
@@ -356,11 +356,11 @@ export default new Command({
                     ephemeral: true,
                     content: `Este servidor não está na black lotus`
                 })
-                data1.blackLotus.representant = user.id
+                data1.modules.blackLotus.representant = user.id
                 await data1.save()
                 await interaction.reply({
                     ephemeral: true,
-                    content: `O representante do servidor ${data1.blackLotus.displayName} foi setado para ${user}`
+                    content: `O representante do servidor ${data1.modules.blackLotus.displayName} foi setado para ${user}`
                 })
                 break;
             case 'cargo':
@@ -371,11 +371,11 @@ export default new Command({
                     ephemeral: true,
                     content: `Este servidor não está na black lotus`
                 })
-                data2.blackLotus.role = role.id
+                data2.modules.blackLotus.role = role.id
                 await data2.save()
                 await interaction.reply({
                     ephemeral: true,
-                    content: `O cargo do servidor ${data2.blackLotus.displayName} foi setado para ${role}`
+                    content: `O cargo do servidor ${data2.modules.blackLotus.displayName} foi setado para ${role}`
                 })
                 break;
             case 'cor':
@@ -427,14 +427,14 @@ export default new Command({
                     ephemeral: true,
                     content: `Este servidor não está na black lotus`
                 })
-                if (data3.blackLotus.staffs.find(e => e.id === user2.id)) return interaction.reply({
+                if (data3.modules.blackLotus.staffs.find(e => e.id === user2.id)) return interaction.reply({
                     content: 'Este usuário já é staff desse servidor',
                     ephemeral: true
                 })
-                data3.blackLotus.staffs.push({id: user2.id, role: cargo})
+                data3.modules.blackLotus.staffs.push({id: user2.id, role: cargo})
                 await data3.save()
                 await interaction.reply({
-                    content: `O usuário ${user2} foi setado como staff do servidor ${data3.blackLotus.displayName}`,
+                    content: `O usuário ${user2} foi setado como staff do servidor ${data3.modules.blackLotus.displayName}`,
                     ephemeral: true
                 })
                 break;
@@ -445,11 +445,11 @@ export default new Command({
                     ephemeral: true,
                     content: `Este servidor não está na black lotus`
                 })
-                data.blackLotus.embedWorthy = interaction.options.getBoolean('aparecer')
+                data.modules.blackLotus.embedWorthy = interaction.options.getBoolean('aparecer')
                 await data.save()
                 await interaction.reply({
                     ephemeral: true,
-                    content: `O servidor ${data.blackLotus.displayName} agora ${interaction.options.getBoolean('aparecer') ? 'aparece' : 'não aparece'} no embed`
+                    content: `O servidor ${data.modules.blackLotus.displayName} agora ${interaction.options.getBoolean('aparecer') ? 'aparece' : 'não aparece'} no embed`
 
                 })
                 break;
@@ -460,7 +460,7 @@ export default new Command({
         const options = []
         servers.forEach(server => {
             options.push({
-                name: server.blackLotus.displayName,
+                name: server.modules.blackLotus.displayName,
                 value: server.id
             })
         })

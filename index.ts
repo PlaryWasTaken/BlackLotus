@@ -18,14 +18,19 @@
     - blacklotus.30minTick: Emitted every 30 minutes (Returns: Empty)
     - blacklotus.mainInviteDelete: Emitted when the black lotus invite is deleted in a guild (Returns: D_Invite)
  */
+
+
+require('module-alias/register')
+import SyndicateEmbed from "#structs/SyndicateEmbed";
 import winston from "winston";
 import {Client, Collection} from "discord.js";
 import mongoose from 'mongoose';
 import {ExtendedClient} from "./types";
-import guildManager from './classes/managers/GuildManager';
-import Embed from './classes/structs/Embed';
-import configs from './config.json';
-import {UpdateManager} from "./classes/managers/UpdateManager";
+import SyndicateManager from "#managers/SyndicateManager";
+import BlackLotusManager from '#managers/BlackLotusManager';
+import BlackLotusEmbed from '#structs/BlackLotusEmbed';
+import GuildManager from "#managers/GuildManager";
+import {UpdateManager} from "#managers/UpdateManager";
 import chalk from "chalk";
 import {initWebApi} from "./web";
 
@@ -71,17 +76,20 @@ const mainLogger = createLogger('App', '#aa00ff');
 
 // noinspection JSIgnoredPromiseFromCall
 client.login(process.env.DISCORD_TOKEN)
-
 const extendedClient = client as ExtendedClient
-extendedClient.guildManager = new guildManager(extendedClient);
+extendedClient.logger = mainLogger;
+extendedClient.blackLotusManager = new BlackLotusManager(extendedClient);
+extendedClient.syndicateManager = new SyndicateManager(extendedClient);
+extendedClient.guildManager = new GuildManager(extendedClient);
 extendedClient.commands = new Collection();
 extendedClient.events = new Collection();
 extendedClient.slashCommands = new Collection();
-extendedClient.mainEmbed = new Embed(extendedClient, 0);
-extendedClient.configs = configs;
-extendedClient.logger = mainLogger;
+extendedClient.mainEmbed = new BlackLotusEmbed(extendedClient, 0);
 extendedClient.updateManager = new UpdateManager(extendedClient, mainLogger.child({service: 'UpdateManager', hexColor: '#ffaa00'}));
-extendedClient.updateManager.registerNewUpdateTarget('main', extendedClient.mainEmbed.updateEmbed);
+
+const syndicateEmbed = new SyndicateEmbed(extendedClient);
+extendedClient.updateManager.registerNewUpdateTarget('blackLotus', extendedClient.mainEmbed.updateEmbed.bind(extendedClient.mainEmbed));
+extendedClient.updateManager.registerNewUpdateTarget('syndicate', syndicateEmbed.updateEmbed.bind(syndicateEmbed));
 
 ['eventHandler', 'interactionHandler'].forEach(handler => {
     import(`./handlers/${handler}`).then((file) => {

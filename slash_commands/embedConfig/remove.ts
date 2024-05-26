@@ -1,6 +1,6 @@
 import Command from "../../classes/structs/Command";
 import discord from "discord.js";
-import serverModel from "../../models/guildDataModel";
+import serverModel from "#models/guild.js";
 
 export default new Command({
     command: new discord.SlashCommandBuilder()
@@ -20,7 +20,7 @@ export default new Command({
     guilds: ["896047806454837278", "921162438001447023"],
     async run({client, interaction}) {
         const id = interaction.options.getString('id')
-        await client.guildManager.delete(id).then(async () => {
+        await client.blackLotusManager.delete(id).then(async () => {
             await interaction.reply({ephemeral: true, content: 'Servidor removido com sucesso'})
         }).catch(async (err) => {
             console.log(err)
@@ -32,7 +32,7 @@ export default new Command({
         const options = []
         servers.forEach(server => {
             options.push({
-                name: server.blackLotus.displayName,
+                name: server.modules.blackLotus.displayName,
                 value: server.id
             })
         })

@@ -1,4 +1,4 @@
-import {ExtendedClient} from "../../types";
+import {ExtendedClient} from "#/types";
 import {Logger} from "winston";
 
 type UpdateFn = (client: ExtendedClient) => Promise<void>
@@ -12,6 +12,7 @@ export class UpdateManager {
         this.logger = logger
     }
     public registerNewUpdateTarget(id: string, updateFn: UpdateFn) {
+        this.logger.info(`Registering new update target: ${id}`)
         this.updateTargets.set(id, updateFn)
     }
     public async runUpdateForTarget(id: string) {
@@ -20,8 +21,10 @@ export class UpdateManager {
         return await updateFn(this.client).then(() => true).catch(() => false)
     }
     public async runAllUpdates() {
-        for (let [_, updateFn] of this.updateTargets) {
-            await updateFn(this.client).catch(() => {})
+        this.logger.debug('Running all updates')
+        for (let [name, updateFn] of this.updateTargets) {
+            this.logger.debug('Running update for ' + name)
+            updateFn(this.client).catch(() => {})
         }
     }
 }
