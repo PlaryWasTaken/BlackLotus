@@ -77,7 +77,7 @@ export default new Command({
         }
     },
     async autocomplete({client, interaction}) {
-        const servers = await serverModel.find({$or: [{"blackLotus.displayName": new RegExp(interaction.options.getString('server'), 'i')}, {id: interaction.options.getString('server')}]}).limit(25)
+        const servers = await serverModel.find({$or: [{"modules.blackLotus.displayName": new RegExp(interaction.options.getString('server'), 'i')}, {id: interaction.options.getString('server')}]}).limit(25)
         const options = []
         servers.forEach(server => {
             options.push({
