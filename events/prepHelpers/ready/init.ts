@@ -4,6 +4,7 @@ import {ExtendedClient} from "#/types";
 import {Logger} from "winston";
 import {TextChannel} from "discord.js";
 import {sleep} from "#/utils/sleep";
+import Command from "#structs/Command";
 
 
 async function startTicks(client: ExtendedClient, logger: Logger) {
@@ -24,9 +25,19 @@ export default new Event().setData("ready", async (client) => {
         logger.info('Global slash commands registered')
     }).catch(e => console.log(e))
     logger.info('Registering guild slash commands')
-    const guilds = client.slashCommands.filter(c => !c.isGlobal)
-    for (let [_, command] of guilds) {
-        // await command.registerCommandForGuilds(client)
+    const guilds = client.slashCommands.filter(c => c.guildsWithCommand).map(c => [c.guildsWithCommand, c]) as [string[], Command][]
+    const guildsMap = new Map<string, Command[]>()
+    for (let [guildIds, command] of guilds) {
+        for (let guildId of guildIds) {
+            if (!guildsMap.has(guildId)) guildsMap.set(guildId, [])
+            const commands = guildsMap.get(guildId) as Command[]
+            commands.push(command)
+            guildsMap.set(guildId, commands)
+        }
+    }
+    for (let [guildId, commands] of guildsMap) {
+        const guild = client.guilds.cache.get(guildId) ?? await client.guilds.fetch(guildId)
+        await guild.commands.set(commands.map(c => c.command.toJSON())).catch(e => console.log(e))
     }
     logger.info('Guild slash commands registered')
 

@@ -1,5 +1,6 @@
 import {ActionRowBuilder, ButtonBuilder, EmbedBuilder, TextChannel} from "discord.js";
-const chat = '986077595265282068'
+const blacklotus = '986077595265282068'
+const syndicate = '1199837537624146000'
 import Event from "#structs/Event";
 export default new Event().setData("modal.candidatar", async (client, interaction, args) => {
     const guild = client.blackLotus
@@ -12,7 +13,7 @@ export default new Event().setData("modal.candidatar", async (client, interactio
         interaction.reply({ephemeral: true, content: `O bot não tem perm de criar invites`})
     })
     if (!invite) return
-    const embed = new EmbedBuilder().setTitle(`Candidatura de ${interaction.user.tag} (${args[0]}`)
+    const embed = new EmbedBuilder().setTitle(`Candidatura de ${interaction.user.tag} (${args[0]})`)
         .setFields([
             {name: 'ID Representante', value: interaction.user.id, inline: true},
             {name: 'Tag', value: interaction.user.tag, inline: true},
@@ -28,10 +29,18 @@ export default new Event().setData("modal.candidatar", async (client, interactio
         .setColor('#ffaaff')
     const accept = new ButtonBuilder().setCustomId(`acceptServer-${interaction.guild.id}-${invite.code}-${interaction.user.id}`).setEmoji('<:aprove:942479368276541471>').setStyle(3).setLabel('Aceitar')
     const reject = new ButtonBuilder().setCustomId(`rejectServer-${interaction.guild.id}-${invite.code}-${interaction.user.id}`).setEmoji('<:reject:942479368091996200>').setStyle(4).setLabel('Rejeitar')
+    let formChannel: TextChannel;
     const actionRow = new ActionRowBuilder<ButtonBuilder>().setComponents([accept, reject])
-    const blackLotusChat = guild.channels.cache.get(chat) as TextChannel|undefined
-    if (!blackLotusChat) return interaction.reply({ephemeral: true, content: `Tente novamente`})
-    const msg = await blackLotusChat.send({embeds: [embed], components: [actionRow]})
+    if (args[0] === 'syndicate') {
+        const syndicateChat = guild.channels.cache.get(syndicate) as TextChannel|undefined
+        if (!syndicateChat) return interaction.reply({ephemeral: true, content: `Tente novamente`})
+        formChannel = syndicateChat
+    } else {
+        const blackLotusChat = guild.channels.cache.get(blacklotus) as TextChannel|undefined
+        if (!blackLotusChat) return interaction.reply({ephemeral: true, content: `Tente novamente`})
+        formChannel = blackLotusChat
+    }
+    const msg = await formChannel.send({embeds: [embed], components: [actionRow]})
     interaction.user.send({content: `Sua candidatura foi enviada com sucesso, Por Favor mantenha o privado aberto para que eu possa te convidar caso seja aceito`})
         .then(async () => {
             await interaction.reply({ephemeral: true, content: `Enviei sua candidatura para a Black 蓮`})
@@ -43,4 +52,5 @@ export default new Event().setData("modal.candidatar", async (client, interactio
             })
             await msg.delete()
         })
+
 })
