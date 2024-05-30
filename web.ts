@@ -4,8 +4,8 @@ import pm2 from "pm2"
 import {Logger} from "winston";
 import {Collection} from "discord.js";
 import {ExtendedClient} from "./types";
-import guildModel from './models/guildDataModel';
-import {Constelation} from "./models/constelationModel";
+import guildModel from '#models/guild.js';
+import {Constelation} from "#models/constelation";
 
 export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
     const app = express();

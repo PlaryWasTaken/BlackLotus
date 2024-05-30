@@ -7,11 +7,11 @@ import {
     ModalBuilder,
     ActionRowBuilder
 } from 'discord.js';
-import serverModel from "../../models/guildDataModel";
+import serverModel from "#models/guild.js";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import Guild from "../../classes/structs/Guild";
+import BlackLotusGuild from "#structs/BlackLotusGuild";
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -130,7 +130,7 @@ export default new Command({
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async run({client, interaction}) {
         if (!await serverModel.findOne({ id: interaction.guild.id })) return interaction.reply({ ephemeral: true, content: `Este commando é apenas para participantes da Black蓮` })
-        let guildData = await client.guildManager.fetch(interaction.guild.id).catch(() => { })
+        let guildData = await client.blackLotusManager.fetch(interaction.guild.id).catch(() => { })
         if (!guildData) return interaction.reply({ ephemeral: true, content: `Você não é membro da Black蓮` })
         switch (interaction.options.getSubcommand()) {
             case 'testar':
@@ -140,7 +140,7 @@ export default new Command({
                 case 'notificar':
                     if (!guildData.partnerships) return interaction.reply({ ephemeral: true, content: 'Você não pode usar esse comando ainda!' })
                     guildData.partnerships.notify = interaction.options.getBoolean('notificar')
-                    guildData.data.partnerships.notify = interaction.options.getBoolean('notificar')
+                    guildData.data.modules.partnerships.notify = interaction.options.getBoolean('notificar')
                     await guildData.data.save()
                     await interaction.reply({ content: `Notificar o representante do servidor quando você puder enviar novamente a mensagem de parceria foi alterado para: ${interaction.options.getBoolean('notificar') ? 'Ativado' : 'Desativado'}`, ephemeral: true })
                 break;
@@ -152,11 +152,11 @@ export default new Command({
                 await interaction.reply({ ephemeral: true, content: `Estou enviando as mensagens para todos os servidores. Tempo estimado: ${time} - ${time + 1} Minutos` })
                 const result = await guildData.partnerships.sendAll()
                     .catch(async err => {
-                        if (err === 'cooldown') return await interaction.followUp({ ephemeral: true, content: `Você está em cooldown por favor espere mais ${dayjs((guildData as Guild).partnerships.timer).toNow(true)}` })
+                        if (err === 'cooldown') return await interaction.followUp({ ephemeral: true, content: `Você está em cooldown por favor espere mais ${dayjs((guildData as BlackLotusGuild).partnerships.timer).toNow(true)}` })
                         await interaction.followUp({ephemeral: true, content: 'Seu servidor não está pronto para enviar parcerias, Erro Encontrado: ' + err})
                     })
                 if (!result) return
-                guildData.data.partnerships.notified = false
+                guildData.data.modules.partnerships.notified = false
                 await guildData.data.save()
                 await interaction.followUp({ ephemeral: true, content: 'Enviei sua parceria para todos os servidores registrados!' })
                 break;
@@ -164,7 +164,7 @@ export default new Command({
                 if (!guildData.partnerships) return interaction.reply({ ephemeral: true, content: 'Você não pode usar esse comando ainda!' })
                 if (guildData.id !== interaction.guild.id) return interaction.reply({ ephemeral: true, content: 'Você deve utilizar este comando em seu servidor!' })
                 const cargo = interaction.options.getRole('mencao')
-                guildData.data.partnerships.mentionId = cargo.id
+                guildData.data.modules.partnerships.mentionId = cargo.id
                 await guildData.data.save()
                 interaction.reply({ ephemeral: true, content: `Troquei com sucesso o cargo que será mencionado para: ${cargo.name}` })
                 break;
@@ -172,7 +172,7 @@ export default new Command({
                 if (!guildData.partnerships) return interaction.reply({ ephemeral: true, content: 'Você não pode usar esse comando ainda!' })
                 if (guildData.id !== interaction.guild.id) return interaction.reply({ ephemeral: true, content: 'Você deve utilizar este comando em seu servidor!' })
                 const chat = interaction.options.getChannel('chat')
-                guildData.data.partnerships.channelId = chat.id
+                guildData.data.modules.partnerships.channelId = chat.id
                 await guildData.data.save()
                 interaction.reply({ ephemeral: true, content: `Troquei com sucesso o chat que será utlizado para: ${chat.name}` })
                 break;
@@ -189,13 +189,13 @@ export default new Command({
                 const cargoRegistro = interaction.options.getRole('mencao')
                 const textoRegistro = interaction.options.getString('texto')
                 if (!(chatRegistro as CategoryChannel).isTextBased()) return interaction.reply({ ephemeral: true, content: 'O chat selecionado não é um chat de texto!' })
-                guildData.data.partnerships = {
+                guildData.data.modules.partnerships = {
                     channelId: chatRegistro.id,
                     mentionId: cargoRegistro.id,
                     message: textoRegistro,
-                    timer: guildData.data.partnerships.timer || 0,
-                    notify: guildData.data.partnerships.notify || false,
-                    notified: guildData.data.partnerships.notified || false
+                    timer: guildData.data.modules.partnerships.timer || 0,
+                    notify: guildData.data.modules.partnerships.notify || false,
+                    notified: guildData.data.modules.partnerships.notified || false
                 }
                 await guildData.data.save()
                 interaction.reply({ ephemeral: true, content: `Seu servidor foi registrado com sucesso!` })

@@ -23,6 +23,7 @@ function findJsFiles(dir: string, client: ExtendedClient, logger: Logger) {
                 logger.info(`Loading slash command ${command.name} from ${filePath}`)
                 client.slashCommands.set(command.name, command)
             }).catch((err) => {
+                console.log(err)
                 logger.error(`Error loading slash command ${filePath}\n${err}`)
             })
         }

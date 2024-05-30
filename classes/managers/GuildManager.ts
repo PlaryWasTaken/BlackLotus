@@ -1,66 +1,53 @@
-import {ExtendedClient} from "../../types";
+import {ExtendedClient} from "#/types";
 
-import Guild from '../structs/Guild';
-import Constelation from '../structs/Constellation';
-import GuildModel from '../../models/guildDataModel';
+import GuildModel from '#models/guild.js';
+import Guild from "#structs/Guild";
+import {Logger} from "winston";
 export default class GuildManager {
     private readonly client: ExtendedClient;
+    private logger: Logger;
     constructor(client: ExtendedClient) {
         this.client = client
+        this.logger = client.logger.child({service: 'GuildManager', hexColor: '#ffc9ff'})
     }
     fetch(id: string): Promise<Guild> {
         return new Promise(async (resolve, err) => {
             const guild = await this.client.guilds.fetch(id).catch(err)
-            const guildData = await GuildModel.findOne({ id: id }).populate('blackLotus.constelation')
+            const guildData = await GuildModel.findOne({ id: id })
             if (!guildData) return err('Registration not found')
             if (!guild) return
             resolve(new Guild(id, this.client, guild, guildData as any)) // Im not going to do the type gymnastics that needs to be done so this typechecks
         })
     }
-    create({ id, repId, invite }: {
-        id: string,
-        repId: string,
-        invite: string
+    create({ id }: {
+        id: string
     }): Promise<Guild> {
         return new Promise(async (resolve, err) => {
             const guild = await this.client.guilds.fetch(id).catch(err)
             if (!guild) return err('Guild not found')
             const guildData = await GuildModel.findOne({ id: id })
             if (guildData) return err('Registration already exists')
-            const ConstelationHandle = new Constelation(id, this.client, guild, undefined)
             const profile = await GuildModel.create({
                 id: id,
-                blackLotus: {
-                    displayName: guild.name,
-                    invite: `https://discord.gg/${guild.vanityURLCode || invite}`,
-                    representant: repId,
-                    constelation: await ConstelationHandle.fetch(),
-                    embedWorthy: guild.name.length < 25,
-                    joinedAt: Date.now()
-                }
+                blacklisted: false,
             })
             await profile.save()
             const guildHandle = new Guild(id, this.client, guild, profile as any)
-            this.client.emit('blacklotus.newGuild', guildHandle)
             resolve(guildHandle)
         })
     }
-    delete(id: string, reason: string = 'Guilda foi deletada, não estava com o bot (Razão padrão)'): Promise<this> {
+    delete(id: string): Promise<this> {
         return new Promise(async (resolve, err) => {
-            const guildData = await GuildModel.findOne({ id: id }).populate('blackLotus.constelation')
+            const guildData = await GuildModel.findOne({ id: id })
             if (!guildData) return err('Registration not found')
             const guildObj = await this.client.guilds.fetch(id).catch(err)
             if (!guildObj) {
-                this.client.logger.info(`Guild ${id} was not found when trying to delete it`)
-                const role = await this.client.blackLotus.roles.fetch(guildData.blackLotus.role).catch(() => {})
-                if (role) await role.delete().catch(() => {})
-                await guildData.delete()
-                this.client.emit('blackLotus.guildDeleteIncomplete', id, reason)
-                this.client.emit('blacklotus.guildDelete', id, reason)
+                this.logger.info(`Guild ${id} was not found when trying to delete it, this means the guild has removed the bot`)
+                await GuildModel.findByIdAndDelete(guildData._id)
                 return resolve(this)
             }
             const guild = new Guild(id, this.client, guildObj, guildData as any)
-            const result = await guild.delete(reason).catch((error) => {
+            const result = await guild.delete().catch((error) => {
                 err(error)
             })
             if (!result) return
@@ -69,13 +56,13 @@ export default class GuildManager {
     }
     fetchByKV(filter: Object): Promise<Array<Guild>> {
         return new Promise(async (resolve) => {
-            const guildData = await GuildModel.find(filter).populate('blackLotus.constelation')
+            const guildData = await GuildModel.find(filter)
             if (!guildData || guildData.length === 0) return []
             const guilds = []
             for (const guild of guildData) {
                 const guildObj = await this.client.guilds.fetch(guild.id).catch(() => {})
                 if (!guildObj) {
-                    this.client.logger.warning(`Guild ${guild.id} was not found when trying to fetch it`)
+                    this.logger.warning(`Guild ${guild.id} was not found when trying to fetch it by K/V`)
                     continue
                 }
                 guilds.push(new Guild(guild.id, this.client, guildObj, guild as any))

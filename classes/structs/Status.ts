@@ -18,6 +18,7 @@ export default class statusHandler {
     }
 
     async startLoop() {
+        this.running = true
         while (this.running) {
             for (let status of this.statusList) {
                 this.client.user.setActivity(status[0], status[1])

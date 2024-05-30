@@ -1,4 +1,4 @@
-import Command from "../../classes/structs/Command";
+import Command from "#structs/Command";
 
 const {SlashCommandBuilder} = require("discord.js");
 import {ActionRowBuilder, ButtonBuilder} from "discord.js";
@@ -31,12 +31,12 @@ export default new Command({
             .setRequired(true)
             ),
     async run({client, interaction}) {
-        const guild = await client.guildManager.fetch(interaction.guild.id).catch(() => {
+        const guild = await client.blackLotusManager.fetch(interaction.guild.id).catch(() => {
         })
         if (!guild) return await interaction.reply({ephemeral: true, content: 'Esse servidor não está na Black Lótus'})
-        guild.data.blackLotus.displayName = interaction.options.getString('name')
-        guild.data.blackLotus.trackNameChanges = false
-        guild.data.blackLotus.embedWorthy = true
+        guild.data.modules.blackLotus.displayName = interaction.options.getString('name')
+        guild.data.modules.blackLotus.trackNameChanges = false
+        guild.data.modules.blackLotus.embedWorthy = true
         const actionRow = new ActionRowBuilder<ButtonBuilder>()
             .setComponents([
                 new ButtonBuilder()

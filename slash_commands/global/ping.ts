@@ -1,6 +1,6 @@
 import Command from "../../classes/structs/Command";
+import {SlashCommandBuilder} from "discord.js";
 
-const { SlashCommandBuilder } = require('discord.js');
 export default new Command({
     global: true,
     command: new SlashCommandBuilder()
