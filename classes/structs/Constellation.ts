@@ -1,5 +1,5 @@
 import ConstellationModel from '#models/constelation'
-import GuildModel from '#models/guild.js'
+import GuildModel, {GuildDocument} from '#models/guild.js'
 import {ExtendedClient} from "../../types";
 import {Guild} from "discord.js";
 type Constelation = {_id: string, name: string, defaultRoles: any[], position: number, minimumMemberAmount: number, roleId: string}
@@ -7,7 +7,7 @@ export default class ConstellationHandler {
     private id: any;
     private client: ExtendedClient;
     private guild: Guild;
-    private data: any;
+    private data: GuildDocument;
     constructor(id: any, client: ExtendedClient, guild: Guild, data: any) {
         this.id = id
         this.client = client
@@ -43,25 +43,25 @@ export default class ConstellationHandler {
     }
     updateConstellation(): Promise<Constelation> {
         return new Promise(async (resolve, err) => {
-            this.client.logger.info(`Updating Constellation for ${this.data.blackLotus.displayName}`)
+            this.client.logger.info(`Updating Constellation for ${this.data.modules.blackLotus.displayName}`)
             const constellation = await this.fetch()
-            if (!this.data.blackLotus.role) return err('No role')
-            const role = await this.client.blackLotus.roles.fetch(this.data.blackLotus.role).catch(() => {})
+            if (!this.data.modules.blackLotus.role) return err('No role')
+            const role = await this.client.blackLotus.roles.fetch(this.data.modules.blackLotus.role).catch(() => {})
             const constelationRole = await this.client.blackLotus.roles.fetch(constellation.roleId).catch(() => {})
-            const representant = await this.client.blackLotus.members.fetch(this.data.representant).catch(() => {})
+            const representant = await this.client.blackLotus.members.fetch(this.data.modules.blackLotus.representant).catch(() => {})
             if (!role || !constelationRole || !representant) return err('no role found')
             await role.edit({ position: constelationRole.position - 1 }) // Move the guild role to bellow the constellation role
-            if (!this.data.blackLotus.staffs) this.data.blackLotus.staffs = []
-            this.data.blackLotus.staffs.push(this.data.blackLotus.representant) // Everything applies the same to the representant so just add him in here instead of doing something else
-            for (const staff of this.data.blackLotus.staffs) {
+            if (!this.data.modules.blackLotus.staffs) this.data.modules.blackLotus.staffs = []
+            this.data.modules.blackLotus.staffs.push(this.data.modules.blackLotus.representant) // Everything applies the same to the representant so just add him in here instead of doing something else
+            for (const staff of this.data.modules.blackLotus.staffs) {
                 if (!staff.id) continue
                 const member = await this.client.blackLotus.members.fetch(staff.id).catch(() => {})
                 if (!member) { // Just in case the member left the server while the bot was offline
-                    this.data.blackLotus.staffs = this.data.blackLotus.staffs.filter(staff2 => staff2.id !== staff.id)
+                    this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff2 => staff2.id !== staff.id)
                     await this.data.save()
                     continue
                 }
-                await member.roles.remove(this.data.blackLotus.constellation.roleId)
+                await member.roles.remove(this.data.modules.blackLotus.constelation.roleId)
                 const staffGuilds = await this.client.blackLotusManager.fetchByKV({ "modules.blackLotus.staffs": { $elemMatch: { id: staff.id } } })
                 const rolesToAdd = new Set() // Using a set to prevent duplicate ids
                 rolesToAdd.add(constelationRole.id)
@@ -76,7 +76,7 @@ export default class ConstellationHandler {
                 await member.roles.add([...rolesToAdd] as any)
             }
             // Remove the representant from the staff array
-            this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff => staff.id !== this.data.modules.blackLotus.representant.id)
+            this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff => staff.id !== this.data.modules.blackLotus.representant)
             await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "blackLotus.constelation": constellation._id } })
             resolve(constellation)
         })
