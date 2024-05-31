@@ -1,6 +1,6 @@
 import ConstellationModel from '#models/constelation'
 import GuildModel, {GuildDocument} from '#models/guild.js'
-import {ExtendedClient} from "../../types";
+import {ExtendedClient} from "#/types";
 import {Guild} from "discord.js";
 type Constelation = {_id: string, name: string, defaultRoles: any[], position: number, minimumMemberAmount: number, roleId: string}
 export default class ConstellationHandler {
@@ -77,7 +77,7 @@ export default class ConstellationHandler {
             }
             // Remove the representant from the staff array
             this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff => staff.id !== this.data.modules.blackLotus.representant)
-            await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "blackLotus.constelation": constellation._id } })
+            await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "module.blackLotus.constelation": constellation._id } })
             resolve(constellation)
         })
     }
