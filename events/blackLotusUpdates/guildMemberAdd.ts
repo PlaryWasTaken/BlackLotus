@@ -1,5 +1,6 @@
 import Discord from 'discord.js'
 import Event from '../../classes/structs/Event.js'
+import BlackLotusGuild from "#structs/BlackLotusGuild";
 
 export default new Event().setData("guildMemberAdd", async (client, member) => {
     const guild = member.guild
@@ -41,7 +42,7 @@ export default new Event().setData("guildMemberAdd", async (client, member) => {
         }).catch(async  () => {
             const embed = new Discord.EmbedBuilder()
                 .setTitle('Erro ao atualizar constelação')
-                .setDescription(`O servidor ${guild.name} (Id: ${guild.id}) mudou de constelação (Indo de: ${guildData.data.modules.blackLotus.constelation.name} para ${constelation.name}), mas houve um erro ao atualizar a constelação`).setColor('#ff0000').setTimestamp()
+                .setDescription(`O servidor ${guild.name} (Id: ${guild.id}) mudou de constelação (Indo de: ${(guildData as BlackLotusGuild).data.modules.blackLotus.constelation.name} para ${constelation.name}), mas houve um erro ao atualizar a constelação`).setColor('#ff0000').setTimestamp()
             await client.logChannel.send({embeds: [embed]})
         })
     }
