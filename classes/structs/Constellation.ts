@@ -58,6 +58,7 @@ export default class ConstellationHandler {
                 const member = await this.client.blackLotus.members.fetch(staff.id).catch(() => {})
                 if (!member) { // Just in case the member left the server while the bot was offline
                     this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff2 => staff2.id !== staff.id)
+                    this.data.markModified('modules.blackLotus.staffs')
                     await this.data.save()
                     continue
                 }
@@ -77,7 +78,7 @@ export default class ConstellationHandler {
             }
             // Remove the representant from the staff array
             this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff => staff.id !== this.data.modules.blackLotus.representant)
-            await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "module.blackLotus.constelation": constellation._id } })
+            await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "modules.blackLotus.constelation": constellation._id } })
             resolve(constellation)
         })
     }

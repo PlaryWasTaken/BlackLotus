@@ -35,7 +35,14 @@ export default new Event().setData("guildMemberAdd", async (client, member) => {
         const embed = new Discord.EmbedBuilder()
             .setTitle('Constelação alterada')
             .setDescription(`O servidor ${guild.name} (Id: ${guild.id}) mudou de constelação (Indo de: ${guildData.data.modules.blackLotus.constelation.name} para ${constelation.name})`).setColor('#6a00ff').setTimestamp()
-        await client.logChannel.send({embeds: [embed]})
-        await guildData.constelation.updateConstellation()
+
+        await guildData.constelation.updateConstellation().then(async () => {
+            await client.logChannel.send({embeds: [embed]})
+        }).catch(async  () => {
+            const embed = new Discord.EmbedBuilder()
+                .setTitle('Erro ao atualizar constelação')
+                .setDescription(`O servidor ${guild.name} (Id: ${guild.id}) mudou de constelação (Indo de: ${guildData.data.modules.blackLotus.constelation.name} para ${constelation.name}), mas houve um erro ao atualizar a constelação`).setColor('#ff0000').setTimestamp()
+            await client.logChannel.send({embeds: [embed]})
+        })
     }
 })

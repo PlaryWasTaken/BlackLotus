@@ -21,7 +21,7 @@ async function startTicks(client: ExtendedClient, logger: Logger) {
 export default new Event().setData("ready", async (client) => {
     const logger = client.logger.child({service: 'Init', hexColor: '#75ffb1'})
     logger.info('Registering global slash commands')
-    client.application.commands.set(client.slashCommands.filter(c => c.isGlobal).map(c => c.command.toJSON())).then(() => {
+    client.application.commands.set(client.slashCommands.filter(c => c.isGlobal).map(c => c.command.toJSON()) as any).then(() => {
         logger.info('Global slash commands registered')
     }).catch(e => console.log(e))
     logger.info('Registering guild slash commands')
@@ -37,7 +37,7 @@ export default new Event().setData("ready", async (client) => {
     }
     for (let [guildId, commands] of guildsMap) {
         const guild = client.guilds.cache.get(guildId) ?? await client.guilds.fetch(guildId)
-        await guild.commands.set(commands.map(c => c.command.toJSON())).catch(e => console.log(e))
+        await guild.commands.set(commands.map(c => c.command.toJSON()) as any).catch(e => console.log(e))
     }
     logger.info('Guild slash commands registered')
 

@@ -1,4 +1,9 @@
-import {AutocompleteInteraction, ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
+import {
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+    SlashCommandBuilder, SlashCommandOptionsOnlyBuilder,
+    SlashCommandSubcommandsOnlyBuilder
+} from "discord.js";
 import {ExtendedClient} from "#/types";
 
 type RunFunction = (args: {
@@ -12,7 +17,9 @@ type AutocompleteFunction = (args: {
 type AnySlashCommand =
     SlashCommandBuilder
     | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
-    | Omit<SlashCommandBuilder, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
+    | Omit<SlashCommandBuilder, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">
+    | SlashCommandSubcommandsOnlyBuilder
+    | SlashCommandOptionsOnlyBuilder
 export default class Command {
     public plugins?: {
         autocomplete?: string[],
@@ -74,7 +81,7 @@ export default class Command {
             if (!guildObj) continue
 
             if (guildObj.commands.cache.has(this.data.name)) await guildObj.commands.edit(this.data.name, this.data)
-            else await guildObj.commands.create(this.data)
+            else await guildObj.commands.create(this.data as any)
         }
         return this
     }
