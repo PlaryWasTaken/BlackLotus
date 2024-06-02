@@ -10,4 +10,4 @@ export default new Event().setData("tick", async (client) => {
         })
     }
     lastUpdate++
-}, true)
+})
