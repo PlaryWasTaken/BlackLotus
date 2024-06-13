@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import guildModel from "#models/guild.js";
+import guildModel, {GuildDocument} from "#models/guild.js";
 function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
@@ -7,9 +7,9 @@ function sleep(milliseconds) {
 import discord from 'discord.js';
 import {ExtendedClient} from "#/types";
 export default class Partnerships {
-    private client: any; // TODO
-    public data: any;
-    private guild: any;
+    private client: ExtendedClient;
+    public data: GuildDocument;
+    private guild: discord.Guild;
     public id: string;
     public channelId: string;
     public mentionId: string;
@@ -17,19 +17,19 @@ export default class Partnerships {
     public timer: any;
     public notify: boolean;
     public notified: boolean;
-    constructor(client: ExtendedClient, guild, data) {
+    constructor(client: ExtendedClient, guild: discord.Guild, data?: GuildDocument) {
         this.client = client
         this.data = data
         this.guild = guild
         this.id = guild.id
-        if (!data) data = {}
-        if (!data.partnerships) data.partnerships = {}
-        this.channelId = data.partnerships?.channelId
-        this.mentionId = data.partnerships?.mentionId
-        this.message = data.partnerships?.message
-        this.timer = data.partnerships?.timer
-        this.notify = data.partnerships?.notify
-        this.notified = data.partnerships?.notified
+        if (data && data.modules.partnerships) {
+            this.channelId = data.modules.partnerships.channelId
+            this.mentionId = data.modules.partnerships.mentionId
+            this.message = data.modules.partnerships.message
+            this.timer = data.modules.partnerships.timer
+            this.notify = data.modules.partnerships.notify
+            this.notified = data.modules.partnerships.notified
+        }
     }
 
     canUse() {
@@ -42,7 +42,7 @@ export default class Partnerships {
 
     checkBeforeSend() {
         return new Promise(async (resolve, reject) => {
-            const channel = await this.client.channels.fetch(this.channelId).catch(() => {})
+            const channel = await this.client.channels.fetch(this.channelId).catch(() => {}) as discord.TextChannel | undefined
             if (!channel) return reject('Chat não encontrado')
             if (!channel.isTextBased()) return  reject('O chat não é um chat de texto')
             if (this.guild.id !== channel.guild.id) return  reject('O chat não é do mesmo servidor')
@@ -60,7 +60,7 @@ export default class Partnerships {
             if (!this.canUse()) reject('cooldown')
             const cu = await this.checkBeforeSend().catch(reject)
             if (!cu) return
-            const guilds = await guildModel.find({ "partnerships.channelId": { $exists: true } }).catch(() => {})
+            const guilds = await guildModel.find({ "modules.partnerships.channelId": { $exists: true } }).catch(() => {})
             if (!guilds) return reject('No guilds found')
             for (let guild of guilds) {
                 if (guild.id === this.id) continue;
@@ -72,8 +72,8 @@ export default class Partnerships {
                     .catch(() => {
                 })
             }
-            this.data.partnerships.timer = dayjs().add(3, 'day').valueOf()
-            this.data.partnerships.notified = false
+            this.data.modules.partnerships.timer = dayjs().add(3, 'day').valueOf()
+            this.data.modules.partnerships.notified = false
             await this.data.save()
             resolve(true)
         })

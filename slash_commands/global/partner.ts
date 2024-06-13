@@ -131,7 +131,7 @@ export default new Command({
     async run({client, interaction}) {
         if (!await serverModel.findOne({ id: interaction.guild.id })) return interaction.reply({ ephemeral: true, content: `Este commando é apenas para participantes da Black蓮` })
         let guildData = await client.blackLotusManager.fetch(interaction.guild.id).catch(() => { })
-        if (!guildData) return interaction.reply({ ephemeral: true, content: `Você não é membro da Black蓮` })
+        if (!guildData) return interaction.reply({ ephemeral: true, content: `Você não é membro da Black蓮 (Servidores da Black Syndicate não podem usar deste sistema neste momento)` })
         switch (interaction.options.getSubcommand()) {
             case 'testar':
                 if (!guildData.partnerships) return interaction.reply({ ephemeral: true, content: 'Você não pode usar esse comando ainda!' })
