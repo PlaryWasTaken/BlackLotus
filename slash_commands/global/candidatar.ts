@@ -24,7 +24,8 @@ export default new Command({
 
     if (cooldownEnd > now) {
       const timeLeft = (cooldownEnd - now) / 1000;
-      return interaction.reply({ ephemeral: true, content: `<:warn:1251149443869184052> | ${k(interaction.user.id)}, *por razões de segurança*, o comando tem um tempo de espera. Por favor, aguarde **${timeLeft.toFixed(1)}** segundos e tente novamente.` });
+      const roundedTimeLeft = Math.floor(parseFloat(timeLeft.toFixed(1)));
+      return interaction.reply({ ephemeral: true, content: `<:warn:1251149443869184052> | ${k(interaction.user.id)}, *por razões de segurança*, o comando tem um tempo de espera. Por favor, aguarde **${roundedTimeLeft}** segundos e tente novamente.` });
     }
 
     cooldowns.set(interaction.guildId, now + cooldownTime);
