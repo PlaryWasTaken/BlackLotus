@@ -1,22 +1,65 @@
-import {ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle} from "discord.js";
+import {
+  ActionRowBuilder,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  userMention as k
+} from "discord.js";
 import Event from "#structs/Event";
 
-export default new Event().setData("button.rejectServer", async (client, interaction, args) => {
-    const modal = new ModalBuilder()
-        .setCustomId('rejectServer-' + args[0] + '-' + args[2] + '-' + interaction.message.id)
-        .setTitle('Rejeitar servidor')
-    const modalRow = new ActionRowBuilder<TextInputBuilder>().addComponents([
+export default new Event().setData(
+  "button.rejectServer",
+  async (client, interaction, args) => {
+    const divPermRoleId = "1154855047625195530";
+    const centralId = "896047806454837278";
+
+    const centralGuild = await client.guilds.fetch(centralId);
+    const permRole = centralGuild.roles.cache.get(divPermRoleId);
+
+    const interactionUser = await centralGuild.members.fetch(
+      interaction.user.id
+    );
+
+    const hasPermission = interactionUser.roles.cache.some(
+      (role) => role.position > permRole.position
+    );
+
+    if (hasPermission) {
+      const modal = new ModalBuilder()
+        .setCustomId(
+          "rejectServer-" +
+            args[0] +
+            "-" +
+            args[2] +
+            "-" +
+            interaction.message.id +
+            "-" +
+            args[3] +
+            "-" +
+            args[1]
+        )
+        .setTitle("Rejeitar candidatura");
+      const modalRow = new ActionRowBuilder<TextInputBuilder>().addComponents([
         new TextInputBuilder()
-            .setCustomId('rejectServerReason')
-            .setRequired(true)
-            .setStyle(TextInputStyle.Paragraph)
-            .setLabel('Motivo')
-    ])
-    modal.addComponents(modalRow)
-    await interaction.showModal(modal)
-    /*
+          .setCustomId("rejectServerReason")
+          .setRequired(false)
+          .setStyle(TextInputStyle.Paragraph)
+          .setLabel("Forneça um motivo:"),
+      ]);
+      modal.addComponents(modalRow);
+      await interaction.showModal(modal);
+      /*
     const embed = new discord.EmbedBuilder(interaction.message.embeds[0].data).setColor('#ff0000')
     await interaction.update({ embeds: [embed], components: [] })
     client.emit("blacklotus.serverReject")
      */
-})
+    } else {
+      interaction.reply({
+        ephemeral: true,
+        content: `<:warn:1251149443869184052> | ${k(
+          interaction.user.id
+        )} você não tem permissão para executar essa interação! *Caso acredite que isso seja um erro, entre em contato com o suporte.*`,
+      });
+    }
+  }
+);

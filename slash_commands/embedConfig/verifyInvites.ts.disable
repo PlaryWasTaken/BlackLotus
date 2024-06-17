@@ -13,10 +13,10 @@ export default new Command({
             .setRequired(true)
             .setAutocomplete(true)
         ),
-    guilds: ["896047806454837278", "921162438001447023"],
+    guilds: ["896047806454837278"],
     async run({client, interaction}) {
         const constellation = interaction.options.getString('constelacão')
-        const servers = await serverModel.find({"module.blackLotus.constelation": constellation})
+        const servers = await serverModel.find({"module.blackLotus.constellation": constellation})
         servers.sort((a, b) => a.modules.blackLotus.displayName.localeCompare(b.modules.blackLotus.displayName))
         let chunked: GuildDocument[][] = []
         const size = 10;
