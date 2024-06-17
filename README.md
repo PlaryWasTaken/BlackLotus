@@ -13,7 +13,7 @@ Lotus App is a Discord app designed to serve The <a href="https://blacklotusasso
 
 <br>
 
-<div align="center"><a href="https://blacklotusassoc.org/" target="blank"><img align="center" src="https://media.discordapp.net/attachments/1150106588758167694/1150174200812797962/bl.png?ex=666ffb72&is=666ea9f2&hm=55802f3d307d62c4a34c6cd7e9a6c209985f618161507c6cfa51eb9beeed63dd&format=webp&quality=lossless&width=1440&height=512&" width=100% /></a></div>
+<div align="center"><a href="https://blacklotusassoc.org/" target="blank"><img align="center" src="https://cdn.discordapp.com/banners/896047806454837278/5bdf241768450d6e64ef62837e9a5200.png?size=2048" width=100% /></a></div>
 <br><br>
 
 ## Installation and Setup
