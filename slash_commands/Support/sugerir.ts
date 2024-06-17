@@ -1,6 +1,6 @@
 import discord from "discord.js";
 import Command from "#structs/Command";
-const ownerID = "753033047380590662" || "177840117057191937";
+const ownerID = "177840117057191937";
 export default new Command({
   command: new discord.SlashCommandBuilder()
     .setName("sugerir")

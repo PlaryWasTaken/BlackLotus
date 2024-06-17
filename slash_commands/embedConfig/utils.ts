@@ -38,7 +38,7 @@ export default new Command({
         {
           const constellation = interaction.options.getString("constelacão");
           const servers = await serverModel.find({
-            "modules.blackLotus.constelation": constellation,
+            "modules.blackLotus.constellation": constellation,
           });
           servers.sort((a, b) =>
             a.modules.blackLotus.displayName.localeCompare(b.modules.blackLotus.displayName),
