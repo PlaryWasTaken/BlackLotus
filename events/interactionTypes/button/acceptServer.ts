@@ -35,7 +35,7 @@ export default new Event().setData("button.acceptServer", async (client, interac
     a: "Association",
   };
 
-  const status = new ButtonBuilder().setCustomId(`disabled`).setEmoji("<a:1_laydowntorest:1042548347715727390>").setStyle(1).setLabel(" ").setDisabled(true);
+  const status = new ButtonBuilder().setCustomId(`disabled`).setEmoji("<a:1_everythingisstable:1042548343852777523>").setStyle(1).setLabel(" ").setDisabled(true);
 
   const accept = new ButtonBuilder().setCustomId(`disabled2`).setEmoji("<a:1_verified:1055293708825808947>").setStyle(3).setLabel("Aceitar").setDisabled(true);
 
