@@ -93,9 +93,9 @@ export default class BlackLotusEmbed {
     return new Promise(async (resolve, err) => {
       await this.loadInfo(); // Reload embed info
 
-      const channel = (await this.client.channels
+      const channel = await this.client.channels
         .fetch(this.message.channelId)
-        .catch(err)) as TextChannel;
+        .catch(err) as TextChannel;
       if (!channel) return;
       const message = await channel.messages
         .fetch(this.message.msgId)
