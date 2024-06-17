@@ -71,7 +71,7 @@ export default new Command({
                 break;
             case 'verifyinvites': {
                 const constellation = interaction.options.getString('constelacão')
-                const servers = await serverModel.find({"module.blackLotus.constelation": constellation})
+                const servers = await serverModel.find({"modules.blackLotus.constelation": constellation})
                 servers.sort((a, b) => a.modules.blackLotus.displayName.localeCompare(b.modules.blackLotus.displayName))
                 let chunked: GuildDocument[][] = []
                 const size = 10;
