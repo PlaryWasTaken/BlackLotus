@@ -9,8 +9,8 @@ export default new Command({
     .setName("utilitário")
     .setDefaultMemberPermissions(8)
     .setNameLocalizations({
-      "en-US": "utilitário",
-      "pt-BR": "utilities",
+      "pt-BR": "utilitário",
+      "en-US": "utilities",
     })
     .setDescription("Utils commands")
     .addSubcommandGroup((group) =>

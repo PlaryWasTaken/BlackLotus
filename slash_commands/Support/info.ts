@@ -6,8 +6,8 @@ export default new Command({
   command: new discord.SlashCommandBuilder()
     .setName("server")
     .setNameLocalizations({
-      "en-US": "info",
-      "pt-BR": "info",
+      "en-US": "server",
+      "pt-BR": "server",
     })
     .setDescription("Comando para pegar informacões sobre um servidor da black lotus")
     .setDescriptionLocalizations({
@@ -18,8 +18,8 @@ export default new Command({
       group
         .setName("info")
         .setNameLocalizations({
-          "en-US": "server",
-          "pt-BR": "servidor",
+          "en-US": "info",
+          "pt-BR": "info",
         })
         .setDescription("Informacões sobre um servidor da black lotus")
         .setDescriptionLocalizations({

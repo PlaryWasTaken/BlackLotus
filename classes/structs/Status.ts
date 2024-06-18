@@ -17,17 +17,15 @@ export default class StatusHandler {
         ];
     }
 
-    async initialize() {
-        const countServersMembers = await serverSchema.countDocuments();
-        this.statusList.push([`✨ ${countServersMembers} servidores membros`, { type: discord.ActivityType.Custom }]);
-    }
-
     async startLoop() {
-        await this.initialize(); 
         this.running = true;
         while (this.running) {
-            for (let status of this.statusList) {
-                this.client.user.setActivity(status[0], status[1]);
+            for (let i = 0; i < this.statusList.length; i++) {
+                if (i === this.statusList.length - 1) {
+                    const countServersMembers = await serverSchema.countDocuments();
+                    this.statusList[i] = [`✨ ${countServersMembers} servidores membros`, { type: discord.ActivityType.Custom }];
+                }
+                this.client.user.setActivity(this.statusList[i][0], this.statusList[i][1]);
                 await sleep(20000);
             }
         }
