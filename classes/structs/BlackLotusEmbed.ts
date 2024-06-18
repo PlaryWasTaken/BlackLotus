@@ -15,7 +15,7 @@ export default class BlackLotusEmbed {
     loadInfo(): Promise<this> {
         return new Promise(async (resolve) => {
             this.message = await MessageModel.findOne({ identifier: this.id })
-            this.servers = await this.client.blackLotusManager.fetchByKV({ "modules.blackLotus.constelation": { $exists: true }, "modules.blackLotus.embedWorthy": true})
+            this.servers = await this.client.blackLotusManager.fetchByKV({ "modules.blackLotus.constellation": { $exists: true }, "modules.blackLotus.embedWorthy": true})
             resolve(this)
         })
     }

@@ -9,7 +9,7 @@ export default new Event().setData("guildMemberAdd", async (client, member) => {
     if (!guildData) return
     if (!guildData.data || !guildData.data.modules.blackLotus.constellation || !guildData.data.modules.blackLotus.trackGrowth) return
     const constellation = await guildData.constellation.fetch().catch(() => {
-        client.logger.debug('Constelation unable to be fetched')
+        client.logger.debug('Constellation unable to be fetched')
     })
     if (constellation && constellation.name !== guildData.data.modules.blackLotus.constellation.name) {
         if (!guildData.data.modules.blackLotus.representant) {
