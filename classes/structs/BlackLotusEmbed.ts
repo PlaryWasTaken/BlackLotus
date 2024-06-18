@@ -1,5 +1,5 @@
 import MessageModel, {EmbedMessageModel} from "#models/nEmbedMessageModel";
-import ConstellationModel from "#models/constelation";
+import ConstellationModel from "#models/constellation";
 import {APIEmbed, APIEmbedField, EmbedBuilder, TextChannel} from "discord.js";
 import {ExtendedClient} from "#/types";
 import BlackLotusGuild from "./BlackLotusGuild";
@@ -23,9 +23,9 @@ export default class BlackLotusEmbed {
         return new Promise(async (resolve) => {
             let classMap = new Map<string, BlackLotusGuild[]>()
             for (let server of this.servers) {
-                let serverClass = classMap.get(server.data.modules.blackLotus.constelation._id + '')
+                let serverClass = classMap.get(server.data.modules.blackLotus.constellation._id + '')
                 if (!serverClass) {
-                    classMap.set(server.data.modules.blackLotus.constelation._id + '', new Array(server))
+                    classMap.set(server.data.modules.blackLotus.constellation._id + '', new Array(server))
                 } else {
                     serverClass.push(server)
                 }

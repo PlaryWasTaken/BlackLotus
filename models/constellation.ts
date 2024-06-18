@@ -8,7 +8,7 @@ const keySchema = new mongoose.Schema({
     roleId: {type: String}
 })
 
-export type Constelation = HydratedDocument<{
+export type Constellation = HydratedDocument<{
     name: string,
     defaultRoles: Array<string>,
     position: number,
@@ -16,7 +16,7 @@ export type Constelation = HydratedDocument<{
     roleId: string
 }>
 
-const model = mongoose.model("Constelations", keySchema);
+const model = mongoose.model("Constellations", keySchema);
 
 module.exports = model;
 export default model;

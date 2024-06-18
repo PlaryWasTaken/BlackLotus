@@ -1,4 +1,4 @@
-import ConstellationModel from '#models/constelation'
+import ConstellationModel from '#models/constellation'
 import GuildModel, {GuildDocument} from '#models/guild.js'
 import {ExtendedClient} from "#/types";
 import {Guild} from "discord.js";
@@ -62,13 +62,13 @@ export default class ConstellationHandler {
                     await this.data.save()
                     continue
                 }
-                await member.roles.remove(this.data.modules.blackLotus.constelation.roleId)
+                await member.roles.remove(this.data.modules.blackLotus.constellation.roleId)
                 const staffGuilds = await this.client.blackLotusManager.fetchByKV({ "modules.blackLotus.staffs": { $elemMatch: { id: staff.id } } })
                 const rolesToAdd = new Set() // Using a set to prevent duplicate ids
                 rolesToAdd.add(constelationRole.id)
                 for (const guild of staffGuilds) {
                     if (guild.id === this.data.id) continue
-                    rolesToAdd.add(guild.data.modules.blackLotus.constelation.roleId ) // This has to stay here to maintain the old constelation role if the user is part of the staff of another guild
+                    rolesToAdd.add(guild.data.modules.blackLotus.constellation.roleId ) // This has to stay here to maintain the old constellation role if the user is part of the staff of another guild
                     if (guild.data.modules.blackLotus.role) {
                         rolesToAdd.add(guild.data.modules.blackLotus.role)
                     }
@@ -78,7 +78,7 @@ export default class ConstellationHandler {
             }
             // Remove the representant from the staff array
             this.data.modules.blackLotus.staffs = this.data.modules.blackLotus.staffs.filter(staff => staff.id !== this.data.modules.blackLotus.representant)
-            await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "modules.blackLotus.constelation": constellation._id } })
+            await GuildModel.findOneAndUpdate({ id: this.data.id }, { $set: { "modules.blackLotus.constellation": constellation._id } })
             resolve(constellation)
         })
     }

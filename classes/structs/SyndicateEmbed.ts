@@ -1,5 +1,5 @@
 import MessageModel, {EmbedMessageModel} from "#models/nEmbedMessageModel";
-import ConstellationModel from "#models/constelation";
+import ConstellationModel from "#models/constellation";
 import {APIEmbed, APIEmbedField, EmbedBuilder, TextChannel} from "discord.js";
 import {ExtendedClient} from "#/types";
 import BlackLotusGuild from "./BlackLotusGuild";

@@ -32,7 +32,7 @@ export default class BlackLotusGuild {
     private client: ExtendedClient;
     public readonly guild: DGuild;
     public data: GuildDocument;
-    public readonly constelation: ConstellationHandler;
+    public readonly constellation: ConstellationHandler;
     public readonly partnerships: Partnerships;
     public staffs: Array<{
         id: string,
@@ -46,11 +46,11 @@ export default class BlackLotusGuild {
         this.guild = guild
         this.data = data
         if (this.guild) {
-            this.constelation = new ConstellationHandler(id, client, this.guild, data)
+            this.constellation = new ConstellationHandler(id, client, this.guild, data)
             this.partnerships = new Partnerships(client, this.guild, data)
         } else client.logger.warning('No guild data provided for guild ' + data.modules.blackLotus.displayName + ' (' + id + ')' )
         this.staffs = this.data.modules.blackLotus.staffs || []
-        this.roles.push(this.data.modules.blackLotus.role, this.data.modules.blackLotus.constelation.roleId)
+        this.roles.push(this.data.modules.blackLotus.role, this.data.modules.blackLotus.constellation.roleId)
         this.serverRoleId = this.data.modules.blackLotus.role
 
     }

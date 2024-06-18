@@ -1,5 +1,5 @@
 import mongoose, {HydratedDocument} from "mongoose";
-import {Constelation} from "#models/constelation";
+import {Constellation} from "#models/constellation";
 
 const keySchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
@@ -8,7 +8,7 @@ const keySchema = new mongoose.Schema({
         blackLotus: {
             displayName: {type: String, required: false },
             invite: { type: String, required: false },
-            constelation: {type: mongoose.Types.ObjectId, ref: 'Constelations', autopopulate: true },
+            constellation: {type: mongoose.Types.ObjectId, ref: 'Constelations', autopopulate: true },
             representant: {type: String, required: false },
             staffs: {type: Array, required: false },
             role: {type: String, required: false },
@@ -51,7 +51,7 @@ export type GuildDocument = HydratedDocument<{
         blackLotus?: {
             displayName: string;
             invite: string;
-            constelation: Constelation;
+            constellation: Constellation;
             representant: string;
             staffs: Array<any>;
             role: string;

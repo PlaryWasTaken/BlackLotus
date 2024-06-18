@@ -1,108 +1,113 @@
 import {
-    Awaitable,
-    ButtonInteraction,
-    Client,
-    ClientEvents, Collection,
-    Guild,
-    GuildMember,
-    ModalSubmitInteraction,
-    Role, TextChannel,
-    VoiceState
+  Awaitable,
+  ButtonInteraction,
+  Client,
+  ClientEvents,
+  Collection,
+  Guild,
+  GuildMember,
+  ModalSubmitInteraction,
+  Role,
+  TextChannel,
+  VoiceState,
 } from "discord.js";
-import {Logger} from "winston";
+import { Logger } from "winston";
 import Command from "#structs/Command";
 import BlackLotusManager from "#managers/BlackLotusManager";
 import statusHandler from "#structs/Status";
 import BlackLotusEmbed from "#structs/BlackLotusEmbed";
-import {UpdateManager} from "#managers/UpdateManager";
+import { UpdateManager } from "#managers/UpdateManager";
 import Event from "#structs/Event";
 import GuildManager from "#managers/GuildManager";
 import SyndicateManager from "#managers/SyndicateManager";
 
 interface ExtendedClient extends Client {
-    logger: Logger;
+  logger: Logger;
 
-    statusHandler: statusHandler;
+  statusHandler: statusHandler;
 
-    blackLotus: Guild;
+  blackLotus: Guild;
 
-    commands: CommandsMap;
+  commands: CommandsMap;
 
-    blackLotusManager: BlackLotusManager;
+  blackLotusManager: BlackLotusManager;
 
-    syndicateManager: SyndicateManager;
+  syndicateManager: SyndicateManager;
 
-    guildManager: GuildManager;
+  guildManager: GuildManager;
 
-    slashCommands: Collection<string, Command>
+  slashCommands: Collection<string, Command>;
 
-    logChannel: TextChannel;
+  logChannel: TextChannel;
 
-    events: Collection<string, Event>;
+  events: Collection<string, Event>;
 
-    mainEmbed: BlackLotusEmbed;
+  mainEmbed: BlackLotusEmbed;
 
-    updateManager: UpdateManager;
+  updateManager: UpdateManager;
 
+  on<K extends keyof ExtendedClientEvents>(
+    event: K,
+    listener: (...args: ExtendedClientEvents[K]) => Awaitable<void>
+  ): this;
 
+  on<S extends string | symbol>(
+    event: Exclude<S, keyof ExtendedClientEvents>,
+    listener: (...args: any[]) => Awaitable<void>
+  ): this;
 
-    on<K extends keyof ExtendedClientEvents>(event: K, listener: (...args: ExtendedClientEvents[K]) => Awaitable<void>): this;
+  once<K extends keyof ExtendedClientEvents>(
+    event: K,
+    listener: (...args: ExtendedClientEvents[K]) => Awaitable<void>
+  ): this;
 
-    on<S extends string | symbol>(
-        event: Exclude<S, keyof ExtendedClientEvents>,
-        listener: (...args: any[]) => Awaitable<void>,
-    ): this;
+  once<S extends string | symbol>(
+    event: Exclude<S, keyof ExtendedClientEvents>,
+    listener: (...args: any[]) => Awaitable<void>
+  ): this;
 
-    once<K extends keyof ExtendedClientEvents>(event: K, listener: (...args: ExtendedClientEvents[K]) => Awaitable<void>): this;
+  emit<K extends keyof ExtendedClientEvents>(
+    event: K,
+    ...args: ExtendedClientEvents[K]
+  ): boolean;
 
-    once<S extends string | symbol>(
-        event: Exclude<S, keyof ExtendedClientEvents>,
-        listener: (...args: any[]) => Awaitable<void>,
-    ): this;
+  emit<S extends string | symbol>(
+    event: Exclude<S, keyof ExtendedClientEvents>,
+    ...args: unknown[]
+  ): boolean;
 
-    emit<K extends keyof ExtendedClientEvents>(event: K, ...args: ExtendedClientEvents[K]): boolean;
+  off<K extends keyof ExtendedClientEvents>(
+    event: K,
+    listener: (...args: ExtendedClientEvents[K]) => Awaitable<void>
+  ): this;
 
-    emit<S extends string | symbol>(event: Exclude<S, keyof ExtendedClientEvents>, ...args: unknown[]): boolean;
+  off<S extends string | symbol>(
+    event: Exclude<S, keyof ExtendedClientEvents>,
+    listener: (...args: any[]) => Awaitable<void>
+  ): this;
 
-    off<K extends keyof ExtendedClientEvents>(event: K, listener: (...args: ExtendedClientEvents[K]) => Awaitable<void>): this;
+  removeAllListeners<K extends keyof ExtendedClientEvents>(event?: K): this;
 
-    off<S extends string | symbol>(
-        event: Exclude<S, keyof ExtendedClientEvents>,
-        listener: (...args: any[]) => Awaitable<void>,
-    ): this;
+  removeAllListeners<S extends string | symbol>(
+    event?: Exclude<S, keyof ExtendedClientEvents>
+  ): this;
 
-    removeAllListeners<K extends keyof ExtendedClientEvents>(event?: K): this;
-
-    removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof ExtendedClientEvents>): this;
-
-    addMiddleware(func: (args: MiddlewareArgs) => Promise<boolean>): void;
+  addMiddleware(func: (args: MiddlewareArgs) => Promise<boolean>): void;
 }
 
 export interface ExtendedClientEvents extends ClientEvents {
-    roleAdded: [
-        member: GuildMember,
-        role: Role
-    ];
-    roleRemoved: [
-        member: GuildMember,
-        role: Role
-    ];
-    joinedVoiceChannel: [
-        state: VoiceState
-    ];
-    leftVoiceChannel: [
-        state: VoiceState
-    ];
-    movedVoiceChannel: [
-        oldState: VoiceState,
-        newState: VoiceState
-    ];
-    newBoosterMember: [
-        member: GuildMember
-    ];
-    tick: [],
-    [key: `button.${string}`]: [ interaction: ButtonInteraction, args: string[] ],
-    [key: `modal.${string}`]: [ interaction: ModalSubmitInteraction, args: string[] ],
+  roleAdded: [member: GuildMember, role: Role];
+  roleRemoved: [member: GuildMember, role: Role];
+  joinedVoiceChannel: [state: VoiceState];
+  leftVoiceChannel: [state: VoiceState];
+  movedVoiceChannel: [oldState: VoiceState, newState: VoiceState];
+  newBoosterMember: [member: GuildMember];
+  tick: [];
+  [key: `button.${string}`]: [interaction: ButtonInteraction, args: string[]];
+  [key: `modal.${string}`]: [
+    interaction: ModalSubmitInteraction,
+    args: string[]
+  ];
 }
 
 /*
@@ -112,7 +117,7 @@ interface GuildDocument extends Document {
     blackLotus: {
         displayName: string;
         invite: string;
-        constelation: {
+        constellation: {
             _id: string;
             name: string;
             defaultRoles: Array,
@@ -137,6 +142,3 @@ interface GuildDocument extends Document {
     };
 }
  */
-
-
-
