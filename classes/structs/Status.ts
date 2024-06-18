@@ -1,9 +1,9 @@
 import { ExtendedClient } from "../../types";
-import discord, { ActivityType } from 'discord.js';
+import { ActivityType } from 'discord.js';
 import { sleep } from "../../utils/sleep";
 import serverSchema from '#models/guild.js';
 
-type StatusFunction = (client: ExtendedClient) => Promise<[string, { type: ActivityType }]>;
+type StatusFunction = (client: ExtendedClient) => Promise<[string, ActivityType]>;
 
 export default class StatusHandler {
     private client: ExtendedClient;
@@ -13,12 +13,12 @@ export default class StatusHandler {
     constructor(client: ExtendedClient) {
         this.client = client;
         this.statusTemplates = [
-            async (client) => [`🪄 Alcançando ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} usuários!`, { type: discord.ActivityType.Custom }],
-            async (client) => [`🔭 Presente em ${client.guilds.cache.size} serveurs.`, { type: discord.ActivityType.Custom }],
-            async () => [`📌 blacklotusassoc.org`, { type: discord.ActivityType.Custom }],
+            async (client) => [`🪄 Alcançando ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} usuários!`, ActivityType.Custom],
+            async (client) => [`🔭 Presente em ${client.guilds.cache.size} servidores.`, ActivityType.Custom],
+            async () => [`📌 blacklotusassoc.org`, ActivityType.Custom],
             async () => {
                 const countServersMembers = await serverSchema.countDocuments();
-                return [`✨ ${countServersMembers} serveurs membres`, { type: discord.ActivityType.Custom }];
+                return [`✨ ${countServersMembers} servidores membros`, ActivityType.Custom];
             }
         ];
     }
@@ -27,8 +27,8 @@ export default class StatusHandler {
         this.running = true;
         while (this.running) {
             for (let getStatus of this.statusTemplates) {
-                const status = await getStatus(this.client);
-                this.client.user.setActivity(status[0], status[1]);
+                const [name, type] = await getStatus(this.client);
+                this.client.user.setActivity(name, { type });
                 await sleep(20000);
             }
         }
@@ -38,7 +38,7 @@ export default class StatusHandler {
         this.running = false;
     }
 
-    setCustomStatus(options: { type: ActivityType; name: string }) {
-        this.client.user.setActivity(options.name, { type: options.type });
+    setCustomStatus(name: string, type: ActivityType) {
+        this.client.user.setActivity(name, { type });
     }
 }
