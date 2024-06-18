@@ -11,12 +11,11 @@ export default new Event().setData(
   "button.rejectServer",
   async (client, interaction, args) => {
     const divPermRoleId = "1154855047625195530";
-    const centralId = "896047806454837278";
 
-    const centralGuild = await client.guilds.fetch(centralId);
-    const permRole = centralGuild.roles.cache.get(divPermRoleId);
+    const central = client.blackLotus;
+    const permRole = central.roles.cache.get(divPermRoleId);
 
-    const interactionUser = await centralGuild.members.fetch(
+    const interactionUser = await central.members.fetch(
       interaction.user.id
     );
 
