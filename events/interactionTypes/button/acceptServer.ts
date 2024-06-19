@@ -90,7 +90,7 @@ export default new Event().setData("button.acceptServer", async (client, interac
         return interaction.editReply({ content: `<:alert:1251147737756340316> | ${k(interaction.user.id)}, o servidor com o ID: \`${guild.id}\` já está cadastrado na base de dados. *Caso acredite que isso seja um erro, entre em contato com o suporte.*` });
       }
 
-      await member.roles.add("897108319175581746");
+      await member.roles.add(["1246148641446690817", "897108319175581746"]);
       const notVerified = member.roles.cache.some((role) => role.id === "896874533519237120");
       if (notVerified) {
         await member.roles.remove("896874533519237120");

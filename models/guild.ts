@@ -8,7 +8,7 @@ const keySchema = new mongoose.Schema({
         blackLotus: {
             displayName: {type: String, required: false },
             invite: { type: String, required: false },
-            constellation: {type: mongoose.Types.ObjectId, ref: 'Constelations', autopopulate: true },
+            constellation: {type: mongoose.Types.ObjectId, ref: 'Constellations', autopopulate: true },
             representant: {type: String, required: false },
             staffs: {type: Array, required: false },
             role: {type: String, required: false },
