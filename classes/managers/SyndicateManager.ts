@@ -1,6 +1,5 @@
 import {ExtendedClient} from "#/types";
 
-import BlackLotusGuild from '#structs/BlackLotusGuild';
 import SyndicateGuild from "#structs/SyndicateGuild";
 import GuildModel, {GuildDocument} from '#models/guild.js';
 export default class SyndicateManager {
@@ -91,6 +90,13 @@ export default class SyndicateManager {
                 guilds.push(new SyndicateGuild(guild.id, this.client, guildObj, guild as any))
             }
             resolve(guilds)
+        })
+    }
+    fetchAllData(): Promise<Array<GuildDocument>> {
+        return new Promise(async (resolve) => {
+            const guildData = await GuildModel.find({ "modules.syndicate.joinedAt": { $exists: true }, $or: [{blacklisted: false}, {blacklisted: {$exists: false}}]   })
+            if (!guildData || guildData.length === 0) return []
+            resolve(guildData as GuildDocument[])
         })
     }
 }

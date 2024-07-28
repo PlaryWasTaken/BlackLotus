@@ -55,10 +55,10 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
   });
   app.get(`/api/constellations`, async (req, res) => {
     const servers = await guildModel
-      .find({ "blackLotus.constellation": { $exists: true } })
-      .populate<{ blackLotus: { constellation: Constellation } }>(
-        "blackLotus.constellation"
-      );
+        .find({ "blackLotus.constellation": { $exists: true } })
+        .populate<{ blackLotus: { constellation: Constellation } }>(
+            "blackLotus.constellation"
+        );
     const constellations = new Collection<string, any[]>();
     servers.forEach((server) => {
       if (constellations.get(server.blackLotus.constellation.name)) {
@@ -105,6 +105,35 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
       });
     }
     res.status(200).json(obj);
+  });
+  app.get(`/api/syndicate/guilds`, async (req, res) => {
+    const servers = await client.syndicateManager.fetchAllData()
+    const guilds = [];
+    for (const server of servers) {
+      const guild = client.guilds.cache.get(server.id);
+      if (!guild)
+        guilds.push({
+          cached: false,
+          id: server.id,
+          displayName: server.modules.syndicate.displayName,
+          partnerships: server.modules.partnerships,
+          invite: server.modules.syndicate.invite,
+        })
+      else
+        guilds.push({
+          cached: true,
+          currentName: guild.name,
+          id: guild.id,
+          displayName: server.modules.syndicate.displayName,
+          members: guild.memberCount,
+          partnerships: server.modules.partnerships,
+          invite: server.modules.syndicate.invite,
+          icon: guild.iconURL({ size: 1024 }),
+          description: guild.description,
+          banner: guild.bannerURL({ size: 1024 }),
+        })
+    }
+    res.status(200).json(guilds);
   });
   app.listen(port, () => {
     apiLogger.notice(`Listening on port ${port}`);

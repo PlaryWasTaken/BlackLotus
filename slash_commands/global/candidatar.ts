@@ -62,6 +62,12 @@ export default new Command({
     const row3 = new ActionRowBuilder<TextInputBuilder>().addComponents([question2Input]);
     const row4 = new ActionRowBuilder<TextInputBuilder>().addComponents([question3Input]);
 
+    if (interaction.guild.memberCount < 100) {
+      return interaction.reply({
+        content: `O minimo de membros para poder se candidatar é de 100 membros. Atualmente o seu servidor possui ${interaction.guild.memberCount} membros.`,
+        ephemeral: true,
+      });
+    }
     if (interaction.guild.memberCount < 3000) {
       const modal = new ModalBuilder().setCustomId(`candidatar-syndicate`).setTitle("Candidatura | Black Syndicate");
       modal.addComponents([row1, row2, row3, row4]);

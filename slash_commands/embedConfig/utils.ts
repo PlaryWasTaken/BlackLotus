@@ -34,7 +34,7 @@ export default new Command({
   async run({ client, interaction }) {
     const subcommand = interaction.options.getSubcommand();
     switch (subcommand) {
-      case "verifyinvites":
+      case "associação":
         {
           const constellation = interaction.options.getString("constelacão");
           const servers = await serverModel.find({

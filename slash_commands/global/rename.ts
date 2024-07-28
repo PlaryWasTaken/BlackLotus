@@ -2,6 +2,8 @@ import Command from "#structs/Command";
 
 const {SlashCommandBuilder} = require("discord.js");
 import {ActionRowBuilder, ButtonBuilder} from "discord.js";
+import BlackLotusGuild from "#structs/BlackLotusGuild";
+import SyndicateGuild from "#structs/SyndicateGuild";
 export default new Command({
     global: true,
     command: new SlashCommandBuilder()
@@ -31,12 +33,19 @@ export default new Command({
             .setRequired(true)
             ),
     async run({client, interaction}) {
-        const guild = await client.blackLotusManager.fetch(interaction.guild.id).catch(() => {
-        })
-        if (!guild) return await interaction.reply({ephemeral: true, content: 'Esse servidor não está na Black Lótus'})
-        guild.data.modules.blackLotus.displayName = interaction.options.getString('name')
-        guild.data.modules.blackLotus.trackNameChanges = false
-        guild.data.modules.blackLotus.embedWorthy = true
+        let guild = await client.blackLotusManager.fetch(interaction.guild.id).catch(() => {
+        }) as void | BlackLotusGuild | SyndicateGuild
+        if (guild) {
+            guild.data.modules.blackLotus.displayName = interaction.options.getString('name')
+            guild.data.modules.blackLotus.trackNameChanges = false
+            guild.data.modules.blackLotus.embedWorthy = true
+        } else {
+            guild = await client.syndicateManager.fetch(interaction.guild.id).catch(() => {}) as SyndicateGuild // We dont care about the original type, since down the line it just uses the document to save
+            if (!guild) return await interaction.reply({ephemeral: true, content: 'Esse servidor não está na Black Lótus'})
+            guild.data.modules.syndicate.displayName = interaction.options.getString('name')
+            guild.data.modules.syndicate.trackNameChanges = false
+            guild.data.modules.syndicate.embedWorthy = true
+        }
         const actionRow = new ActionRowBuilder<ButtonBuilder>()
             .setComponents([
                 new ButtonBuilder()
@@ -57,7 +66,7 @@ export default new Command({
         const filter = (button) => button.user.id === interaction.user.id
         msg.awaitMessageComponent({filter, time: 60000}).then(async (button) => {
             if (button.customId === 'yes') {
-                await guild.data.save().then(async () => {
+                await (guild as BlackLotusGuild | SyndicateGuild).data.save().then(async () => {
                     await button.reply({
                         content: 'Nome alterado com sucesso',
                         components: [],
