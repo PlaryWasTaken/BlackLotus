@@ -2,7 +2,7 @@ import {ExtendedClient} from "#/types";
 
 import BlackLotusGuild from '#structs/BlackLotusGuild';
 import Constellation from '../structs/Constellation';
-import GuildModel from '#models/guild.js';
+import GuildModel, {GuildDocument} from '#models/guild.js';
 export default class BlackLotusManager {
     private readonly client: ExtendedClient;
     constructor(client: ExtendedClient) {
@@ -93,6 +93,13 @@ export default class BlackLotusManager {
                 guilds.push(new BlackLotusGuild(guild.id, this.client, guildObj, guild as any))
             }
             resolve(guilds)
+        })
+    }
+    fetchAllData(): Promise<Array<GuildDocument>> {
+        return new Promise(async (resolve) => {
+            const guildData = await GuildModel.find({ "modules.blackLotus.constellation": { $exists: true }, $or: [{blacklisted: false}, {blacklisted: {$exists: false}}]   })
+            if (!guildData || guildData.length === 0) return []
+            resolve(guildData as GuildDocument[])
         })
     }
 }

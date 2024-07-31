@@ -1,6 +1,6 @@
 import {ExtendedClient} from "#/types";
 
-import GuildModel from '#models/guild.js';
+import GuildModel, {GuildDocument} from '#models/guild.js';
 import Guild from "#structs/Guild";
 import {Logger} from "winston";
 export default class GuildManager {

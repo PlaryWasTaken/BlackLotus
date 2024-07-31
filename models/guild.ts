@@ -58,6 +58,7 @@ export type GuildDocument = HydratedDocument<{
             embedWorthy: boolean;
             trackGrowth: boolean | null;
             trackNameChanges: boolean | null;
+            joinedAt: number | null;
         };
         partnerships?: {
             channelId: string | null;
