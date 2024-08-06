@@ -4,8 +4,7 @@ import pm2 from "pm2";
 import { Logger } from "winston";
 import { Collection } from "discord.js";
 import { ExtendedClient } from "./types";
-import guildModel, {GuildDocument} from "#models/guild.js";
-import { Constellation } from "#models/constellation";
+import {GuildDocument} from "#models/guild.js";
 
 export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
   const app = express();
@@ -72,6 +71,7 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
             cached: false,
             id: server.id,
             displayName: server.modules.blackLotus.displayName,
+            representant: server.modules.blackLotus.representant,
             constellation: {
               name: server.modules.blackLotus.constellation.name,
               minMembers: server.modules.blackLotus.constellation.minimumMemberAmmout,
@@ -84,11 +84,13 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
           currentName: guild.name,
           id: guild.id,
           displayName: server.modules.blackLotus.displayName,
+          representant: server.modules.blackLotus.representant,
           constellation: {
             name: server.modules.blackLotus.constellation.name,
             minMembers: server.modules.blackLotus.constellation.minimumMemberAmmout,
             joinedAt: server.modules.blackLotus.joinedAt || null,
           },
+          features: guild.features,
           members: guild.memberCount,
           partnerships: server.modules.partnerships,
           invite: server.modules.blackLotus.invite,
@@ -110,6 +112,7 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
           cached: false,
           id: server.id,
           displayName: server.modules.syndicate.displayName,
+          representant: server.modules.syndicate.representant,
           partnerships: server.modules.partnerships,
           invite: server.modules.syndicate.invite,
         })
@@ -119,6 +122,8 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
           currentName: guild.name,
           id: guild.id,
           displayName: server.modules.syndicate.displayName,
+          representant: server.modules.syndicate.representant,
+          features: guild.features,
           members: guild.memberCount,
           partnerships: server.modules.partnerships,
           invite: server.modules.syndicate.invite,
