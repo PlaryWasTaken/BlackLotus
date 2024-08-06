@@ -76,6 +76,7 @@ export type GuildDocument = HydratedDocument<{
             role: string;
             embedWorthy: boolean;
             trackNameChanges: boolean | null;
+            joinedAt: number | null;
         };
     }
     configs?: Map<string, any>;

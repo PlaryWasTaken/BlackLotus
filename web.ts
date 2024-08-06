@@ -115,6 +115,7 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
           representant: server.modules.syndicate.representant,
           partnerships: server.modules.partnerships,
           invite: server.modules.syndicate.invite,
+          joinedAt: server.modules.syndicate.joinedAt
         })
       else
         guilds.push({
@@ -127,6 +128,7 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
           members: guild.memberCount,
           partnerships: server.modules.partnerships,
           invite: server.modules.syndicate.invite,
+          joinedAt: server.modules.syndicate.joinedAt,
           icon: guild.iconURL({ size: 1024 }),
           description: guild.description,
           banner: guild.bannerURL({ size: 1024 }),
