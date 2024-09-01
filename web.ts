@@ -136,6 +136,14 @@ export function initWebApi(mainLogger: Logger, client: ExtendedClient) {
     }
     res.status(200).json(guilds);
   });
+  app.get(`/api/countdata`, async (req, res) => {
+    const guilds = client.guilds.cache.size;
+    const users = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+    res.status(200).json({
+      totalGuilds: guilds,
+        totalUsers: users,
+    });
+  })
   app.listen(port, () => {
     apiLogger.notice(`Listening on port ${port}`);
   });
