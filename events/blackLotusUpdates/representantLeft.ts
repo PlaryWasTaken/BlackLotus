@@ -1,7 +1,7 @@
 
 
 import Event from '../../classes/structs/Event.js'
-import {EmbedBuilder, TextChannel} from "discord.js";
+import {EmbedBuilder} from "discord.js";
 
 
 
