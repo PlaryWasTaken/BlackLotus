@@ -118,13 +118,19 @@ export default new Command({
     const servers = await serverModel
       .find({
         $or: [
-          {
-            "modules.blackLotus.displayName": new RegExp(
-              interaction.options.getString("server"),
-              "i",
-            ),
-          },
-          { id: interaction.options.getString("info") },
+            {
+                "modules.blackLotus.displayName": new RegExp(
+                    interaction.options.getString("server"),
+                    "i",
+                ),
+            },
+            {
+                "modules.syndicate.displayName": new RegExp(
+                    interaction.options.getString("server"),
+                    "i",
+                ),
+            },
+          { id: interaction.options.getString("server") },
         ],
       })
       .limit(25);
