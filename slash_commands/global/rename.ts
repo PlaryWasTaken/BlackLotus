@@ -65,12 +65,18 @@ export default new Command({
         })
         const filter = (button) => button.user.id === interaction.user.id
         msg.awaitMessageComponent({filter, time: 60000}).then(async (button) => {
+            await button.deferReply()
             if (button.customId === 'yes') {
                 await (guild as BlackLotusGuild | SyndicateGuild).data.save().then(async () => {
                     await button.reply({
                         content: 'Nome alterado com sucesso',
                         components: [],
                         ephemeral: true
+                    }).catch(async () => {
+                        await button.followUp({ // Shouldnt happen, but just in case
+                            content: 'Nome alterado com sucesso',
+                            ephemeral: true
+                        })
                     })
                 }).catch(async (err) => {
                     console.log(err)
