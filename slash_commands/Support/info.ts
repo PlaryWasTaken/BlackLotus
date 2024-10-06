@@ -137,7 +137,7 @@ export default new Command({
     const options = [];
     servers.forEach((server) => {
       options.push({
-        name: server.modules.blackLotus.displayName,
+        name: server.modules.blackLotus.displayName || server.modules.syndicate.displayName,
         value: server.id,
       });
     });
