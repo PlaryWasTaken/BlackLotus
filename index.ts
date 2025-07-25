@@ -63,7 +63,7 @@ function createLogger(service: string, hexColor: string): winston.Logger {
             new winston.transports.Console({
                 format: winston.format.combine(
                     winston.format.colorize(),
-                    winston.format.printf(info => `${info.fallback?chalk.red("FALLBACK") + " ":""}${chalk.hex(info.hexColor)(`(${info.service})`)} [${info.level}] ${info.message}`),
+                    winston.format.printf(info => `${info.fallback?chalk.red("FALLBACK") + " ":""}${chalk.hex(info.hexColor as string)(`(${info.service})`)} [${info.level}] ${info.message}`),
                     winston.format.splat()
                 )
             })

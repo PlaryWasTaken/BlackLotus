@@ -4,7 +4,7 @@ function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
-import discord from 'discord.js';
+import discord, {TextChannel} from 'discord.js';
 import {ExtendedClient} from "#/types";
 export default class Partnerships {
     private client: ExtendedClient;
@@ -68,7 +68,7 @@ export default class Partnerships {
                 if (!channel) continue;
                 if (!channel.isTextBased()) continue
                 await sleep(3000)
-                await channel.send(this.message.replace(/%mencao%/g, `<@&${guild.modules.partnerships.mentionId}>`).replace(/(@here|@everyone)/g, `<@&${guild.modules.partnerships.mentionId}>`).concat(`\n`, `Rep: <@${this.client.user.id}>`))
+                await (channel as TextChannel).send(this.message.replace(/%mencao%/g, `<@&${guild.modules.partnerships.mentionId}>`).replace(/(@here|@everyone)/g, `<@&${guild.modules.partnerships.mentionId}>`).concat(`\n`, `Rep: <@${this.client.user.id}>`))
                     .catch(() => {
                 })
             }
